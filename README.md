@@ -1,4 +1,4 @@
-# Poll App — Laerning by building AngularJS app
+# Poll App — Learning by building AngularJS app
 
 This project is an application  for a typical polls web app.You can use it to quickly create a poll ,vote for a poll and also view results of a poll.
 
