@@ -7,6 +7,9 @@ var pollValidator = require('./helper/pollValidator');
 var Polls = require('./model/Poll');
 var app = express();
 
+// Separate production and local.
+// var environment = process.env.POLLENV || 'local';
+
 
 var port = process.env.PORT || 3000;
 
@@ -33,13 +36,16 @@ app.get('/', function(req, res) {
  **/
 app.post('/poll/submit', function(req, res) {
     var poll = req.body;
-    if (!pollValidator(poll)) {
-        res.send({error: 'invalid poll'});
-    }
+    pollValidator(poll, function(err) {
+        if (err) {
+            res.send({error: err});
+        }
+    }); 
     Polls.save(poll, function(err) {
+
         if (err)
             res.send({error: 'db error'});
-        res.send({id: 1234});
+        res.json(poll);
     });
 
 });
@@ -47,3 +53,4 @@ app.post('/poll/submit', function(req, res) {
 var server = app.listen(port, function(err) {
     console.log('listening on http://%s:%s', 'localhost', port);
 });
+

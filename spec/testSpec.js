@@ -13,4 +13,33 @@ describe('JSON validator', function() {
     it('should fail validation empty json', function() {
         expect(validator({})).toBe(false);
     });
+
+    it('should fail due to no question', function() {
+        var notValid = {
+            "id": "some-random-string",
+            "user": null,
+            "choices": [ "cat", "dog", "cow" ],
+            "settings": {
+                "deadline": 124,
+                "anonymity": false
+            }
+        };
+        expect(validator(notValid)).toBe(false);
+    });
+    
+
+    it('should validate a valid json', function() {
+        var valid = {
+            "id": "some-random-string",
+            "user": null,
+            "question": "favorite animal",
+            "choices": [ "cat", "dog", "cow" ],
+            "settings": {
+                "deadline": 124,
+                "anonymity": false
+            }
+        };
+        expect(validator(valid)).toBe(true);
+
+    });
 });
