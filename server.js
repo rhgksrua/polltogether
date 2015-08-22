@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 
 var pollValidator = require('./helper/pollValidator');
-var mongoURI = process.env.MONGOLAB_URL || 'mongodb://localhost:27017/polls';
+var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
 var Poll = require('./model/Poll').init(mongoURI, MongoClient);
 var app = express();
 
