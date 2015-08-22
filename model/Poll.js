@@ -38,11 +38,7 @@ module.exports = {
             }
             var collection = db.collection('polls');
             collection.insert(poll, {w: 1}, function(err, result) {
-                if (err) {
-                    callback(err);
-                }
                 callback(err);
-                db.close();
             });
         });
     },

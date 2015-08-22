@@ -6,4 +6,5 @@ tmp
 .DS_Store
 .idea
 *.swap
+*.swp
 .gitignore

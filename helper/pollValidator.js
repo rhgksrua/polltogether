@@ -8,7 +8,7 @@
  * @return {boolean} false on invalid poll submitoin
  */
 var pollValidator = function(poll, callback) {
-    var err;
+    var err = false;
     var required = ['id', 
                     'user', 
                     'question', 
@@ -37,10 +37,9 @@ var pollValidator = function(poll, callback) {
         err = 'need two or more choices';
     }
 
+    callback(err);
+
     if (err) {
-        if (typeof callback === 'function') {
-            callback(err);
-        }
         return false;
     }
     return true;
