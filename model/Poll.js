@@ -3,6 +3,28 @@
 
 module.exports = {
     /**
+     * init
+     *
+     * @param {string} uri for mongodb
+     * @param {MongoClient} mongo
+     * @return {self} returns self
+     */
+    init: function(uri, mongo) {
+        this.uri = uri;
+        this.mongo = mongo;
+        // Chainable
+        return this;
+    },
+    /**
+     * connect
+     *
+     * Not implemented yet
+     *
+     * @return {undefined}
+     */
+    connect: function() {
+    },
+    /**
      * save
      *
      * @param {json} json received from user
@@ -10,8 +32,19 @@ module.exports = {
      * @return {undefined} undefined
      */
     save: function(poll, callback) {
-        // callback(err, data);
-        callback(false);
+        this.mongo.connect(this.uri, function(err, db) {
+            if (err) {
+                callback('failed to connect to db');
+            }
+            var collection = db.collection('polls');
+            collection.insert(poll, {w: 1}, function(err, result) {
+                if (err) {
+                    callback(err);
+                }
+                callback(err);
+                db.close();
+            });
+        });
     },
     /**
      * get
@@ -21,7 +54,7 @@ module.exports = {
      * @return {undefined}
      */
     get: function(id, callback) {
-        // ca
+        // callback(err)
         var err = false;
         callback(err);
     }
