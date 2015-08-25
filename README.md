@@ -20,7 +20,26 @@ git commit -m "new"
 git remote add origin https://github.com/pknelakuditi/PollApp.git
 git push -u origin master
 ```
+heroku deployment:
+https://scotch.io/tutorials/how-to-deploy-a-node-js-app-to-heroku
 
+create the remote repository
+```heroku create app-name```
+
+Deploying Code
+```git push heroku master```
+
+Ensure One Instance Is Running
+```heroku ps:scale web=1```
+	
+You can push an alternative branch to Heroku using Git.
+```git push heroku pknFeature:master```
+
+Rename :
+```heroku apps:rename newname --app oldname```
+	
+create a Procfile in the root of your project
+```web: node server.js```
 
 
 

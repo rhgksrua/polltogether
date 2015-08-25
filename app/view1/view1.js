@@ -27,7 +27,7 @@
 
 
         }])
-    .$controller('pollCtrl',["$location","pollService" ,function($location,pollService){
+        .controller('pollCtrl',["$location","pollService" ,function($location,pollService){
 
             var pollCtrl=this;
             pollCtrl.uniqueId=pollService.uniqueId;
