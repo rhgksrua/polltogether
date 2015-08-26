@@ -6,13 +6,15 @@
         .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/view1', {
                 templateUrl: 'view1/view1.html',
-                controller: 'View1Ctrl'
+                controller: 'pollCtrl',
+                controllerAs:'pc'
             });
         }])
 
         .service('pollService', ['$http','$window',function($http,$window) {
             var poll=this;
             poll.uniqueId;
+            console.log("angular service")
             poll.createPoll=function(Poll){
                 //Ajax post poll to back end
                 console.dir(Poll)
@@ -28,13 +30,29 @@
 
         }])
         .controller('pollCtrl',["$location","pollService" ,function($location,pollService){
+            console.log("ctrler loaded successfully")
 
-            var pollCtrl=this;
-            pollCtrl.uniqueId=pollService.uniqueId;
+            var pc=this;
+            pc.data={answers:[]};
+            pc.test="firstTest"
 
-            pollCtrl.submitNewPoll=function(Poll){
-                pollService.createPoll(Poll);
+            pc.data.answers.push({'id':'choice0'});
+            console.log(pc.data.answers)
+            pc.uniqueId=pollService.uniqueId;
+
+            pc.submitNewPoll=function(){
+                pollService.createPoll(this.data);
                 //redirect using $location to generate unique url for retreving poll.
+            }
+            pc.showLabel=function(choice){
+               // return 1;
+
+                return choice.id===pc.data.answers[pc.data.answers.length-1].id;
+            }
+            pc.addChoice=function(){
+                var newItem=pc.data.answers.length+1;
+                pc.data.answers.push({'id':'choice'+newItem})
+                console.log(pc.data.answers)
             }
 
 

@@ -1,1 +1,24 @@
 <p>This is the partial for view 1.</p>
+<div>
+    test{{pc.test}}
+    <form name="userForm" novalidate data-ng-submit="submit()">
+        <div>
+            <label>Question</label>
+            <input type="text" class="form-control" name="question" placeholder="Question" data-ng-model="pc.data.question" required ng-minlength="10">
+
+        </div>
+        <div  data-ng-repeat="ans in pc.data.answers">
+
+
+            <button ng-show="pc.showLabel(ans)" ng-click="pc.addChoice()">Add</button>
+            <label>Answer</label><input type="text" class="form-control" name="" placeholder="Question" data-ng-model="choice.id" required ng-minlength="10">
+
+
+
+        </div>
+
+
+
+    </form>
+</div>
+
