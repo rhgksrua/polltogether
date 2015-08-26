@@ -1,21 +1,31 @@
 <p>This is the partial for view 1.</p>
 <div>
-    test{{pc.test}}
-    <form name="userForm" novalidate data-ng-submit="submit()">
+
+    <form name="userForm" novalidate data-ng-submit="pc.submitNewPoll()">
         <div>
+
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : userForm.question.$invalid && userForm.question.$dirty }">
             <label>Question</label>
             <input type="text" class="form-control" name="question" placeholder="Question" data-ng-model="pc.data.question" required ng-minlength="10">
-
+            <div class="help-block" ng-messages="userForm.question.$error" ng-show="userForm.question.$dirty">
+                <p class="help-block" ng-message="required">question is required</p>
+                <p class="help-block" ng-message="minlength">question must be more than 10 chars</p>
+            </div>
         </div>
+
         <div  data-ng-repeat="ans in pc.data.answers">
-
-
             <button ng-show="pc.showLabel(ans)" ng-click="pc.addChoice()">Add</button>
-            <label>Answer</label><input type="text" class="form-control" name="" placeholder="Question" data-ng-model="choice.id" required ng-minlength="10">
-
-
-
+            <label>Answer</label><input type="text" class="form-control" name="choice.id" placeholder="Question" data-ng-model="ans.name" required ng-minlength="10">
+<!--{{ans.name}}{{pc.data.answers}}-->
         </div>
+
+
+
+
+
+        <button type="submit">Submit</button>
 
 
 

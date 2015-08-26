@@ -21,7 +21,7 @@
             }
             poll.resultsCallBack=function(data){
                 //call back after posting result to backend
-                console.dir(data);
+               // console.dir(data);
                 poll.results=data;
 
             }
@@ -30,36 +30,29 @@
 
         }])
         .controller('pollCtrl',["$location","pollService" ,function($location,pollService){
-            console.log("ctrler loaded successfully")
+           // console.log("ctrler loaded successfully")
 
             var pc=this;
             pc.data={answers:[]};
             pc.test="firstTest"
-
             pc.data.answers.push({'id':'choice0'});
-            console.log(pc.data.answers)
+            //console.log(pc.data.answers)
             pc.uniqueId=pollService.uniqueId;
 
             pc.submitNewPoll=function(){
-                pollService.createPoll(this.data);
+                pollService.createPoll(pc.data);
                 //redirect using $location to generate unique url for retreving poll.
             }
-            pc.showLabel=function(choice){
-               // return 1;
 
+
+            pc.showLabel=function(choice){
                 return choice.id===pc.data.answers[pc.data.answers.length-1].id;
             }
             pc.addChoice=function(){
-                var newItem=pc.data.answers.length+1;
+                var newItem=pc.data.answers.length;
                 pc.data.answers.push({'id':'choice'+newItem})
                 console.log(pc.data.answers)
             }
-
-
-
-
-
-
     }])
 
 })()
