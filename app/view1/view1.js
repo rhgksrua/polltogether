@@ -43,10 +43,10 @@
            // console.log("ctrler loaded successfully")
 
             var pc=this;
-            pc.data={answers:[]};
+            pc.data={choices:[]};
             pc.test="firstTest"
-            pc.data.answers.push({'id':'choice0'});
-            //console.log(pc.data.answers)
+            pc.data.choices.push({'id':'choice0'});
+            //console.log(pc.data.choices)
             pc.uniqueId=pollService.uniqueId;
 
             pc.submitNewPoll=function(){
@@ -56,12 +56,12 @@
 
 
             pc.showLabel=function(choice){
-                return choice.id===pc.data.answers[pc.data.answers.length-1].id;
+                return choice.id===pc.data.choices[pc.data.choices.length-1].id;
             }
             pc.addChoice=function(){
-                var newItem=pc.data.answers.length;
-                pc.data.answers.push({'id':'choice'+newItem})
-                console.log(pc.data.answers)
+                var newItem=pc.data.choices.length;
+                pc.data.choices.push({'id':'choice'+newItem})
+                console.log(pc.data.choices)
             }
     }])
 
