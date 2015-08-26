@@ -18,6 +18,16 @@
             poll.createPoll=function(Poll){
                 //Ajax post poll to back end
                 console.dir(Poll)
+                $http.post('/someUrl', {msg:'hello word!'}).
+                    then(function(response) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                    }, function(response) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                    });
+
+
             }
             poll.resultsCallBack=function(data){
                 //call back after posting result to backend
