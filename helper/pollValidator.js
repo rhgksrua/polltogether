@@ -1,4 +1,5 @@
 // pollValidator module
+'use strict';
 
 /**
  * pollValidator
@@ -9,11 +10,7 @@
  */
 var pollValidator = function(poll, callback) {
     var err = false;
-    var required = ['id', 
-                    'user', 
-                    'question', 
-                    'choices', 
-                    'settings'];
+    var required = ['question', 'choices'];
 
 
     if (poll === undefined) {
@@ -43,6 +40,6 @@ var pollValidator = function(poll, callback) {
         return false;
     }
     return true;
-}
+};
 
 module.exports = pollValidator;

@@ -8,3 +8,4 @@ tmp
 *.swap
 *.swp
 .gitignore
+*.log
