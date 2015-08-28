@@ -53,14 +53,10 @@
 
             pc.submitNewPoll=function(){
                 console.log("submtting for ajax")
-               // pollService.createPoll(pc.data);
+                pollService.createPoll(pc.data);
                 //redirect using $location to generate unique url for retreving poll.
             };
 
-
-            pc.showLabel=function(choice){
-                return choice.id===pc.data.choices[pc.data.choices.length-1].id;
-            };
             pc.addChoice=function(){
                 var newItem=pc.data.choices.length;
                 pc.data.choices.push({'id':'choice'+newItem});
