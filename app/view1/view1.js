@@ -52,7 +52,8 @@
             pc.uniqueId=pollService.uniqueId;
 
             pc.submitNewPoll=function(){
-                pollService.createPoll(pc.data);
+                console.log("submtting for ajax")
+               // pollService.createPoll(pc.data);
                 //redirect using $location to generate unique url for retreving poll.
             };
 
