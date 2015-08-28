@@ -1,41 +1,33 @@
-<p>This is the partial for view 1.</p>
-<div>
+<div class="container-fluid">
+    <h1 class="text-primary">Create your poll (View1.html)</h1>
+    <div class="well">
+        <form name="userForm" novalidate data-ng-submit="pc.submitNewPoll()">
+            <div>
 
-    <form name="userForm" novalidate data-ng-submit="pc.submitNewPoll()">
-        <div>
-
-        </div>
-
-        <div class="form-group" ng-class="{ 'has-error' : userForm.question.$invalid && userForm.question.$dirty }">
-            <label>Question</label>
-            <input type="text" class="form-control" name="question" placeholder="Question" data-ng-model="pc.data.question" required ng-minlength="10">
-            <div class="help-block" ng-messages="userForm.question.$error" ng-show="userForm.question.$dirty">
-                <p class="help-block" ng-message="required">question is required</p>
-                <p class="help-block" ng-message="minlength">question must be more than 10 chars</p>
             </div>
-        </div>
 
-
-
-        <div class="form-group" ng-class="{ 'has-error' : userForm.question.$invalid && userForm.question.$dirty }" data-ng-repeat="ans in pc.data.choices">
-            <label>Choice</label>
-            <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="10">
-            <button ng-show="pc.showLabel(ans)" ng-click="pc.addChoice()">Add</button>
-            <div class="help-block" ng-messages="userForm['choice'+$index].$error" ng-show="userForm['choice'+$index].$dirty">
-                <p class="help-block" ng-message="required">question is required</p>
-                <p class="help-block" ng-message="minlength">question must be more than 10 chars</p>
+            <div class="form-group" ng-class="{ 'has-error' : userForm.question.$invalid && userForm.question.$dirty }">
+                <label>Question</label>
+                <input type="text" class="form-control" name="question" placeholder="Question" data-ng-model="pc.data.question" required ng-minlength="10">
+                <div class="help-block" ng-messages="userForm.question.$error" ng-show="userForm.question.$dirty">
+                    <p class="help-block" ng-message="required">question is required</p>
+                    <p class="help-block" ng-message="minlength">question must be more than 10 chars</p>
+                </div>
             </div>
-            <!--{{ans.name}}{{pc.data.choices}}-->
-        </div>
 
+            <div class="form-group" ng-class="{ 'has-error' : userForm.question.$invalid && userForm.question.$dirty }" data-ng-repeat="ans in pc.data.choices">
+                <label>Choice</label>
+                <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="10">
+                <div class="help-block" ng-messages="userForm['choice'+$index].$error" ng-show="userForm['choice'+$index].$dirty">
+                    <p class="help-block" ng-message="required">question is required</p>
+                    <p class="help-block" ng-message="minlength">question must be more than 10 chars</p>
+                </div>
+                <!--{{ans.name}}{{pc.data.choices}}-->
+            </div>
+            <button ng-show="pc.showLabel(ans)" ng-click="pc.addChoice()" class="btn btn-default">Add</button>
 
+            <button type="submit" class="btn btn-default">Submit</button>
 
-
-
-        <button type="submit">Submit</button>
-
-
-
-    </form>
+        </form>
+    </div>
 </div>
-
