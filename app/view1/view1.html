@@ -15,12 +15,12 @@
                 </div>
             </div>
 
-            <div class="form-group" ng-class="{ 'has-error' : userForm.question.$invalid && userForm.question.$dirty }" data-ng-repeat="ans in pc.data.choices">
+            <div class="form-group" ng-class="{ 'has-error' : userForm['choice'+$index].$invalid && userForm['choice'+$index].$dirty }" data-ng-repeat="ans in pc.data.choices">
                 <label>Choice</label>
-                <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="10">
+                <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="1">
                 <div class="help-block" ng-messages="userForm['choice'+$index].$error" ng-show="userForm['choice'+$index].$dirty">
-                    <p class="help-block" ng-message="required">question is required</p>
-                    <p class="help-block" ng-message="minlength">question must be more than 10 chars</p>
+                    <p class="help-block" ng-message="required">option is required</p>
+                    <p class="help-block" ng-message="minlength">option must be more than 1 chars</p>
                 </div>
                 <!--{{ans.name}}{{pc.data.choices}}-->
 
