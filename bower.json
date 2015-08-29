@@ -1,8 +1,8 @@
 {
-  "name": "angular-seed",
-  "description": "A starter project for AngularJS",
+  "name": "Poll-App",
+  "description": "A starter project for r/JStogether",
   "version": "0.0.0",
-  "homepage": "https://github.com/angular/angular-seed",
+  "homepage": "https://github.com/pknelakuditi/PollApp",
   "license": "MIT",
   "private": true,
   "dependencies": {
