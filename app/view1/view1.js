@@ -4,7 +4,7 @@
     angular.module('pollApp.pollCreate', ['ngRoute','ngAnimate','ngMessages'])
 
         .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/view1', {
+            $routeProvider.when('/create', {
                 templateUrl: 'view1/view1.html',
                 controller: 'pollCtrl',
                 controllerAs:'pc'

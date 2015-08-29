@@ -7,5 +7,5 @@ angular.module('pollApp', [
   'pollApp.pollVote',
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.otherwise({redirectTo: '/create'});
 }]);
