@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('myApp.view1', ['ngRoute','ngAnimate','ngMessages'])
+    angular.module('pollApp.pollCreate', ['ngRoute','ngAnimate','ngMessages'])
 
         .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/view1', {
@@ -10,19 +10,18 @@
                 controllerAs:'pc'
             });
         }])
-
-        .service('pollService', ['$http','$window',function($http,$window) {
-            var poll=this;
-            poll.ob={uniqueId:0};
+        .service('pollService', ['$http', '$window', function($http, $window) {
+            var poll = this;
+            poll.ob = {uniqueId: 0};
             console.log("angular service");
-            poll.createPoll=function(Poll){
+            poll.createPoll = function(Poll){
                 //Ajax post poll to back end
                 console.dir(Poll);
-                $http.post('/poll/submit', Poll).
-                    then(function(response) {
+                $http.post('/poll/submit', Poll)
+                    .then(function(response) {
                        // console.log(response.data);
-                        poll.ob.uniqueId=response.data;
-                        console.log(poll.ob.uniqueId)
+                        poll.ob.uniqueId = response.data;
+                        console.log(poll.ob.uniqueId);
                         // this callback will be called asynchronously
                         // when the response is available
                     }, function(response) {
@@ -30,39 +29,29 @@
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
                     });
-
-
             };
-
-
-
-
         }])
-        .controller('pollCtrl',["$location","pollService" ,function($location,pollService){
+        .controller('pollCtrl', ["$location", "pollService" ,function($location, pollService){
            // console.log("ctrler loaded successfully")
 
-            var pc=this;
-            pc.data={choices:[]};
-            pc.ob={};
-            pc.test="firstTest";
-            pc.data.choices.push({'id':'choice0'});
+            var pc = this;
+            pc.data = {choices: []};
+            pc.ob = {};
+            pc.test = "firstTest";
+            pc.data.choices.push({'id': 'choice0'});
             //console.log(pc.data.choices)
-            pc.ob=pollService.ob;
+            pc.ob = pollService.ob;
 
-            pc.submitNewPoll=function(){
-                console.log("submtting for ajax")
+            pc.submitNewPoll = function(){
+                console.log("submtting for ajax");
                 pollService.createPoll(pc.data);
                 //redirect using $location to generate unique url for retreving poll.
-
             };
-
-            pc.addChoice=function(){
-                var newItem=pc.data.choices.length;
-                pc.data.choices.push({'id':'choice'+newItem});
+            pc.addChoice = function(){
+                var newItem = pc.data.choices.length;
+                pc.data.choices.push({'id': 'choice' + newItem});
                 console.log(pc.data.choices);
             };
-
-
     }]);
-
 })();
+
