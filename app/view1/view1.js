@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('myApp.view1', ['ngRoute','ngAnimate','ngMessages','ui.bootstrap'])
+    angular.module('myApp.view1', ['ngRoute','ngAnimate','ngMessages'])
 
         .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/view1', {
