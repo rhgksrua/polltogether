@@ -15,7 +15,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         poll.failed = false;
 
         // REMOVE when server api is works.
-        var id = "pollid";
+        //var id = "pollid";
 
         /**
          * setId
@@ -67,9 +67,9 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          * @return {undefined}
          */
         poll.getPoll = function() {
-            $http.get('/poll/' + id)
+            $http.get('/poll/' + poll.id)
                 .then(function(response) {
-                    poll.poll = response.data;
+                    poll.poll = response.data[0];
                     notifyObservers('getPoll');
                     console.log('poll ajax success');
                 }, function(response) {
@@ -108,7 +108,11 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         vc.status = 'Submitting...';
         vc.failed = false;
 
+        // Set url for ajax request
         voteService.setId(vc.id);
+
+        // get poll data
+        voteService.getPoll();
         
         /**
          * updatePolls
@@ -117,8 +121,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          * @return {undefined}
          */
         var updatePolls = function() {
-            // need to change as soon as server api is implemented
-            vc.test = voteService.poll;
+            vc.poll = voteService.poll;
         };
 
         /**
@@ -139,24 +142,6 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         // adding callback function to listen for ajax response object.
         voteService.registerCallback('getPoll', updatePolls);
         voteService.registerCallback('submitVote', submitStatus);
-
-        // temporary poll for testing.
-        var temp = {
-            'id': 'alfekjawe',
-            'user': null,
-            'question': 'favorite animal',
-            'choices': [
-                { id: 'choice0', name: 'dog' },
-                { id: 'choice1', name: 'cat' },
-                { id: 'choice2', name: 'cow' }
-            ]
-        };
-
-        // Temporary poll for testing.  Remove as soon as server api is implemented.
-        vc.poll = temp;
-
-        // get poll data
-        voteService.getPoll();
         
         /**
          * toggleChoice
