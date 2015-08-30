@@ -26,18 +26,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{ vc.status }}</h4>
+                <h4 ng-class="modal-title">{{ vc.status }}</h4>
             </div>
-            <div class="modal-body" ng-show=' vc.errors.success '>
+            <div class="modal-body">
                 <div class="container">
                     <a ng-href="/poll/">Goto Result</a>
                 </div>
             </div>
-            <div class="modal-body" ng-show=' vc.errors.option '>
-                <div class="alert alert-danger" role="alert">Please pick one option</div>
-            </div>
-            <div class="modal-body" ng-show=' vc.errors.server '>
-                <div class="alert alert-danger" role="alert">Cannot accept vote at this time</div>
+            <div class="modal-body" ng-show='vc.failed'>
+                <div class="alert alert-danger" role="alert">Something went wrong</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

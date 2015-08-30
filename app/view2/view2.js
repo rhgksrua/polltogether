@@ -12,6 +12,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
     .service('voteService', ['$http', function($http) {
         var poll = this;
         poll.status = 'Waiting for response...';
+        poll.failed = false;
 
         // REMOVE when server api is works.
         var id = "pollid";
@@ -27,6 +28,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             poll.id = id;
         };
 
+        // container for observer
         var observerCallbacks = {};
 
         /**
@@ -88,10 +90,12 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             $http.post('/poll/vote/submit', vote)
                 .then(function(response) {
                     console.log('vote submit ajax successful');
+                    poll.failed = false;
                     poll.status = 'Vote Submitted!';
                     notifyObservers('submitVote');
                 }, function(response) {
                     console.log('vote submit ajax error');
+                    poll.failed = true;
                     poll.status = 'Vote Failed!';
                     notifyObservers('submitVote');
                 });
@@ -102,13 +106,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         vc.choice = undefined;
         vc.id = $routeParams.id;
         vc.status = 'Submitting...';
-        vc.error = undefined;
-        // toggle error message
-        vc.errors = {
-            success: true,
-            option: false,
-            server: false
-        };
+        vc.failed = false;
 
         voteService.setId(vc.id);
         
@@ -132,7 +130,8 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         var submitStatus = function() {
             console.log('setting new status');
             vc.status = voteService.status;
-            if (vc.status === 'Vote Failed!') {
+            vc.failed = voteService.failed;
+            if (vc.failed) {
                 vc.error = 'Cannot submit vote at this time';
             }
         };
@@ -156,6 +155,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         // Temporary poll for testing.  Remove as soon as server api is implemented.
         vc.poll = temp;
 
+        // get poll data
         voteService.getPoll();
         
         /**
@@ -177,13 +177,11 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          * @return {undefined}
          */
         vc.submitVote = function() {
+            vc.failed = false;
             if (vc.choice === undefined) {
-                vc.errors.option = true;
-                vc.errors.success = false;
+                vc.failed = true;
                 vc.status = 'Need to pick one';
             } else if (vc.choice !== undefined) {
-                vc.errors.success = true;
-                vc.errors.option = false;
                 voteService.submitVote({id: vc.id, choice: vc.choice});
             }
         };
