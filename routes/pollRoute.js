@@ -29,6 +29,9 @@ router.post('/submit', function(req, res) {
                 if (err) {
                     console.log(err);
                     res.json({error: 'db error'});
+                }else {
+                    console.log('sending json...');
+                    res.json(pollUrl);
                 }
             });
 
