@@ -42,4 +42,5 @@ var pollValidator = function(poll, callback) {
     return true;
 };
 
+
 module.exports = pollValidator;
