@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var pollValidator = require('../helper/pollValidator');
-var idValidator=require('../helper.idValidator');
+//var idValidator=require('../helper/idValidator');
 var MongoClient = require('mongodb').MongoClient;
 var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
 var Poll = require('../model/Poll').init(mongoURI, MongoClient);
@@ -30,11 +30,10 @@ router.post('/submit', function(req, res) {
                 if (err) {
                     console.log(err);
                     res.json({error: 'db error'});
-                } else {
-                    console.log('sending json...');
-                    res.json(pollUrl);
                 }
             });
+
+
         } 
     }); 
 });
@@ -42,7 +41,16 @@ router.post('/submit', function(req, res) {
 router.get('/poll',function(req,res){
     var poll=req.body;
     if(idValidator(poll.id,function(err){
-            res.json(Poll)
+            Poll.get(poll.id,function(err,data) {
+                if (err) {
+                    console.log(err);
+                    res.json({error: 'db error'});
+                }else{
+                    console.log(data);
+                   // res.json{data};
+                }
+            })
+
         })){
 
     }else{

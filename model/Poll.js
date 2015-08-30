@@ -50,9 +50,18 @@ module.exports = {
      * @return {undefined}
      */
     get: function(id, callback) {
-        // callback(err)
-        var err = false;
-        callback(err);
+        this.mongo.connect(this.uri, function(err, db) {
+            if (err) {
+                callback('failed to connect to db');
+            }
+            var collection = db.collection('polls');
+
+
+            collection.find({url:id}).toArray(function(err,result){
+                callback(err,result);
+
+            })
+        });
     }
 
 }
