@@ -40,23 +40,15 @@ router.post('/submit', function(req, res) {
 
 router.get('/poll',function(req,res){
     var poll=req.body;
-    if(idValidator(poll.id,function(err){
-            Poll.get(poll.id,function(err,data) {
-                if (err) {
-                    console.log(err);
-                    res.json({error: 'db error'});
-                }else{
-                    console.log(data);
-                   // res.json{data};
-                }
-            })
-
-        })){
-
-    }else{
-        res.json("id error");
-    }
-
+    Poll.get(poll.id,function(err,data) {
+        if (err) {
+            console.log(err);
+            res.json({error: 'db error'});
+        }else{
+            console.log(data);
+            // res.json{data};
+        }
+    })
 })
 
 module.exports = router;
