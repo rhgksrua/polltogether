@@ -2,7 +2,6 @@
 'use strict';
 
 angular.module('pollApp.pollVote', ['ngRoute'])
-
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/vote/:id', {
             templateUrl: 'view2/view2.html',
@@ -12,6 +11,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
     }])
     .service('voteService', ['$http', function($http) {
         var poll = this;
+        poll.status = 'Waiting for response...';
 
         // REMOVE when server api is works.
         var id = "pollid";
@@ -27,17 +27,23 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             poll.id = id;
         };
 
-        var observerCallbacks = [];
+        var observerCallbacks = {};
 
         /**
          * registerCallback
          * registers callback function for observers
          *
+         * @param {string} name of group to notify
          * @param {function} callback
          * @return {undefined}
          */
-        poll.registerCallback = function(callback) {
-            observerCallbacks.push(callback);
+        poll.registerCallback = function(name, callback) {
+            if (observerCallbacks[name]) {
+                observerCallbacks[name].push(callback);
+            } else {
+                observerCallbacks[name] = [];
+                observerCallbacks[name].push(callback);
+            }
         };
 
         /**
@@ -46,15 +52,15 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          *
          * @return {undefined}
          */
-        var notifyObservers = function() {
-            angular.forEach(observerCallbacks, function(callback) {
+        var notifyObservers = function(name) {
+            angular.forEach(observerCallbacks[name], function(callback) {
                 callback();
             });
         };
 
         /**
          * getPoll
-         * ajax request to server api
+         * ajax request to server api to get poll
          *
          * @return {undefined}
          */
@@ -62,17 +68,18 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             $http.get('/poll/' + id)
                 .then(function(response) {
                     poll.poll = response.data;
-                    notifyObservers();
+                    notifyObservers('getPoll');
+                    console.log('poll ajax success');
                 }, function(response) {
                     poll.poll = 'test';
-                    notifyObservers();
-                    console.log('ajax error');
+                    notifyObservers('getPoll');
+                    console.log('poll ajax fail');
                 });
         };
 
         /**
          * submitVote
-         * submits user vote via ajax
+         * ajax request to server api to submit vote
          *
          * @param {object} vote
          * @return {undefined}
@@ -80,16 +87,28 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         poll.submitVote = function(vote) {
             $http.post('/poll/vote/submit', vote)
                 .then(function(response) {
-                    console.log('ajax successful');
+                    console.log('vote submit ajax successful');
+                    poll.status = 'Vote Submitted!';
+                    notifyObservers('submitVote');
                 }, function(response) {
-                    console.log('post ajax error');
+                    console.log('vote submit ajax error');
+                    poll.status = 'Vote Failed!';
+                    notifyObservers('submitVote');
                 });
         };
     }])
-    .controller('pollVoteCtrl', ['voteService', '$routeParams', function(voteService, $routeParams) {
+    .controller('pollVoteCtrl', ['voteService', '$routeParams' , function(voteService, $routeParams) {
         var vc = this;
         vc.choice = undefined;
         vc.id = $routeParams.id;
+        vc.status = 'Submitting...';
+        vc.error = undefined;
+        // toggle error message
+        vc.errors = {
+            success: true,
+            option: false,
+            server: false
+        };
 
         voteService.setId(vc.id);
         
@@ -104,8 +123,23 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             vc.test = voteService.poll;
         };
 
+        /**
+         * submitStatus
+         * Update ajax status based on reponse
+         *
+         * @return {undefined}
+         */
+        var submitStatus = function() {
+            console.log('setting new status');
+            vc.status = voteService.status;
+            if (vc.status === 'Vote Failed!') {
+                vc.error = 'Cannot submit vote at this time';
+            }
+        };
+
         // adding callback function to listen for ajax response object.
-        voteService.registerCallback(updatePolls);
+        voteService.registerCallback('getPoll', updatePolls);
+        voteService.registerCallback('submitVote', submitStatus);
 
         // temporary poll for testing.
         var temp = {
@@ -138,11 +172,19 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         /**
          * submitVote
          * submits vote to server via ajax
+         * fails without a valid choice
          *
          * @return {undefined}
          */
         vc.submitVote = function() {
-            console.log('id choice', vc.id, vc.choice);
-            voteService.submitVote({id: vc.id, choice: vc.choice});
+            if (vc.choice === undefined) {
+                vc.errors.option = true;
+                vc.errors.success = false;
+                vc.status = 'Need to pick one';
+            } else if (vc.choice !== undefined) {
+                vc.errors.success = true;
+                vc.errors.option = false;
+                voteService.submitVote({id: vc.id, choice: vc.choice});
+            }
         };
-}]);
+    }]);

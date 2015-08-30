@@ -5,16 +5,44 @@
         <div class="choices-container">
             <div class='radio'>
                 <div data-ng-repeat='(key, value) in vc.poll.choices'>
-                    <span ng-class='vc.choice == key ? "glyphicon glyphicon-ok" : "blank"'>
-                    </span>
-                    <span ng-click='vc.toggleChoice(key)'>
-                        {{ value.name }}
-                    </span>
+                    <div ng-click='vc.toggleChoice(key)' class='panel panel-default' style='cursor: pointer'>
+                        <div class='panel-body'>
+                            <span ng-class='vc.choice == key ? "glyphicon glyphicon-ok" : "blank"'>
+                            </span>
+                            <span>
+                                {{ value.name }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <button ng-click='vc.submitVote()' class='btn btn-default'>Vote</button>
+        <button ng-click='vc.submitVote()' class='btn btn-default' data-toggle="modal" data-target="#myModal">Vote</button>
     </div>
-    <div>{{ vc.test }}</div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ vc.status }}</h4>
+            </div>
+            <div class="modal-body" ng-show=' vc.errors.success '>
+                <div class="container">
+                    <a ng-href="/poll/">Goto Result</a>
+                </div>
+            </div>
+            <div class="modal-body" ng-show=' vc.errors.option '>
+                <div class="alert alert-danger" role="alert">Please pick one option</div>
+            </div>
+            <div class="modal-body" ng-show=' vc.errors.server '>
+                <div class="alert alert-danger" role="alert">Cannot accept vote at this time</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 

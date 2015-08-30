@@ -4,7 +4,7 @@
 angular.module('pollApp', [
   'ngRoute',
   'pollApp.pollCreate',
-  'pollApp.pollVote',
+  'pollApp.pollVote'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/create'});
