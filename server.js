@@ -11,7 +11,7 @@ var pollRoute = require('./routes/pollRoute');
 // Separate production and local.
 // var environment = process.env.POLLENV || 'local';
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 
 // Serves static files
 app.use(express.static('app'));

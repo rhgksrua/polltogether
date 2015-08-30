@@ -38,15 +38,16 @@ router.post('/submit', function(req, res) {
     }); 
 });
 
-router.get('/poll',function(req,res){
-    var poll=req.body;
+router.get('/:id',function(req,res){
+    var poll=req.params;
     Poll.get(poll.id,function(err,data) {
         if (err) {
             console.log(err);
             res.json({error: 'db error'});
         }else{
+            console.log(poll.id);
             console.log(data);
-            // res.json{data};
+            res.json(data);
         }
     })
 })
