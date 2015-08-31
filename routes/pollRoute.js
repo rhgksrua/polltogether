@@ -26,6 +26,9 @@ router.post('/submit', function(req, res) {
         } else {
             var pollUrl = shortid.generate();
             poll.url = pollUrl;
+            for(var i=0;i<poll.choices.length;i++){
+                poll[i].vote=0;
+            }
 
             Poll.save(poll, function(err) {
                 if (err) {
@@ -67,8 +70,8 @@ router.post('/vote', function(req, res) {
 
 //$inc:{choices[option].vote : 1}
 
-            Poll.update({ "url": url },
-                {  },
+            Poll.update({ "url": url ,"choices.name":option },
+                {$inc:{"choices.$.vote":1 } },
                 { upsert: true },function (err, numUpdated) {
                 if (err) {
                     console.log(err);
