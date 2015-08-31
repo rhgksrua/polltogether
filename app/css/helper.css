@@ -1,0 +1,6 @@
+.result-bar {
+    display: inline-block;
+    background-color: red;
+    width: 1%;
+    height: 10px;
+}
