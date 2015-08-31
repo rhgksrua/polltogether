@@ -74,6 +74,7 @@ module.exports = {
                 {$inc:{"choices.$.vote":1 } },function (err, numUpdated) {
                     if (err) {
                         console.log(err);
+                        callback(err);
                     } else if (numUpdated) {
                         console.log('Updated Successfully %d document(s).', numUpdated);
                     } else {

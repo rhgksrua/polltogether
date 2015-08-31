@@ -34,6 +34,11 @@
             <div class="modal-body">
                 <div class="container" data-dismiss="modal">
                     <a ng-href="/poll/">Goto Result</a>
+                    {{vc.poll.question}}
+                    <div ng-repeat="option in vc.poll.choices">
+                        {{option.name}}{{option.vote}}
+                    </div>
+
                 </div>
             </div>
             <div class="modal-body" ng-show='vc.failed'>

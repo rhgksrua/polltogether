@@ -179,6 +179,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 vc.status = 'Need to pick one';
             } else if (vc.choice !== undefined) {
                 voteService.submitVote({id: vc.id, choice: vc.choice});
+                vc.poll.choices[vc.choice].vote++;
             }
         };
     }]);
