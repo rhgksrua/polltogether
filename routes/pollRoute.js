@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var pollValidator = require('../helper/pollValidator');
+var voteValidator = require('../helper/voteValidator');
 var MongoClient = require('mongodb').MongoClient;
 var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
 var Poll = require('../model/Poll').init(mongoURI, MongoClient);
@@ -25,6 +26,7 @@ router.post('/submit', function(req, res) {
         } else {
             var pollUrl = shortid.generate();
             poll.url = pollUrl;
+
             Poll.save(poll, function(err) {
                 if (err) {
                     console.log(err);
@@ -55,7 +57,37 @@ router.get('/:id', function(req, res) {
                 res.json(data[0]);
             }
         }
+
+    })
+});
+
+router.post('/vote/submit', function(req, res) {
+    var poll = req.body;
+    var url=poll.url;
+    var option=poll.choice;
+    voteValidator(poll, function(err) {
+        if (err) {
+            res.json({error: err});
+        } else {
+
+//$inc:{choices[option].vote : 1}
+
+            Poll.update({ "url": url ,"choices.name":option },
+                {$inc:{"choices.$.vote":1 } },
+                { upsert: true },function (err, numUpdated) {
+                if (err) {
+                    console.log(err);
+                } else if (numUpdated) {
+                    console.log('Updated Successfully %d document(s).', numUpdated);
+                } else {
+                    console.log('No document found with defined "find" criteria!');
+                }});
+
+
+        }
     });
 });
+
+
 
 module.exports = router;

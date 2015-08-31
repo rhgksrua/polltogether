@@ -1,16 +1,13 @@
-// pollValidator module
+/**
+ * Created by pavan on 8/30/15.
+ */
+// voteValidator module
 'use strict';
 
-/**
- * pollValidator
- *
- * @param {object} poll
- * @param {function} callback
- * @return {boolean} false on invalid poll submitoin
- */
-var pollValidator = function(poll, callback) {
+
+var voteValidator = function(poll, callback) {
     var err = false;
-    var required = ['question', 'choices'];
+    var required = ['id', 'choices'];
 
 
     if (poll === undefined) {
@@ -30,9 +27,10 @@ var pollValidator = function(poll, callback) {
             err = 'missing required key(s)';
         }
     });
-    if (poll.choices.length < 1) {
-        err = 'need two or more choices';
+    if (poll.length == 1) {
+        err = 'should have only choices';
     }
+
 
     callback(err);
 
@@ -42,4 +40,5 @@ var pollValidator = function(poll, callback) {
     return true;
 };
 
-module.exports = pollValidator;
+
+module.exports = voteValidator;
