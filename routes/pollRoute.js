@@ -62,26 +62,30 @@ router.get('/:id', function(req, res) {
 });
 
 router.post('/vote/submit', function(req, res) {
+    console.log("vote requested ")
     var poll = req.body;
-    var url=poll.url;
-    var option=poll.choice;
     voteValidator(poll, function(err) {
         if (err) {
             res.json({error: err});
+            console.dir(err);
+            console.log("vote validate not succeded")
+
         } else {
 
 //$inc:{choices[option].vote : 1}
+            console.log("vote validate succeded")
+            console.dir(poll)
+            var option="choice"+poll.choice;
+            console.log("vote index : "+option);
 
-            Poll.update({ "url": url ,"choices.name":option },
-                {$inc:{"choices.$.vote":1 } },
-                { upsert: true },function (err, numUpdated) {
+            Poll.submitVote(poll,function (err, numUpdated) {
                 if (err) {
                     console.log(err);
-                } else if (numUpdated) {
-                    console.log('Updated Successfully %d document(s).', numUpdated);
                 } else {
-                    console.log('No document found with defined "find" criteria!');
+                    console.log('updated ');
                 }});
+
+
 
 
         }

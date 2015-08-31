@@ -62,6 +62,27 @@ module.exports = {
 
             })
         });
+    },
+    submitVote: function(poll, callback) {
+        var option="choice"+poll.choice;
+        this.mongo.connect(this.uri, function(err, db) {
+            if (err) {
+                callback('failed to connect to db');
+            }
+            var collection = db.collection('polls');
+            collection.update({ "url": poll.id ,"choices.id": option},
+                {$inc:{"choices.$.vote":1 } },function (err, numUpdated) {
+                    if (err) {
+                        console.log(err);
+                    } else if (numUpdated) {
+                        console.log('Updated Successfully %d document(s).', numUpdated);
+                    } else {
+                        console.log('No document found with defined "find" criteria!');
+                    }});
+        });
     }
+
+
+
 
 }

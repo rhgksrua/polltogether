@@ -7,7 +7,6 @@
 
 var voteValidator = function(poll, callback) {
     var err = false;
-    var required = ['id', 'choices'];
 
 
     if (poll === undefined) {
@@ -22,11 +21,7 @@ var voteValidator = function(poll, callback) {
         err = 'poll cannot be empty';
         return false;
     }
-    required.forEach(function(el, self) {
-        if (Object.keys(poll).indexOf(el) < 0) {
-            err = 'missing required key(s)';
-        }
-    });
+
     if (poll.length == 1) {
         err = 'should have only choices';
     }
