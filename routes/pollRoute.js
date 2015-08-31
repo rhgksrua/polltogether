@@ -59,7 +59,7 @@ router.get('/:id',function(req,res){
     })
 });
 
-router.post('/vote', function(req, res) {
+router.post('/vote/submit', function(req, res) {
     var poll = req.body;
     var url=poll.url;
     var option=poll.choice;
