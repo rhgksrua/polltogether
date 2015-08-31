@@ -38,7 +38,7 @@
             pc.data = {choices: []};
             pc.ob = {};
             pc.test = "firstTest";
-            pc.data.choices.push({'id': 'choice0'});
+            pc.data.choices.push({'id': 'choice0' , "vote":0});
             //console.log(pc.data.choices)
             pc.ob = pollService.ob;
 
@@ -49,7 +49,7 @@
             };
             pc.addChoice = function(){
                 var newItem = pc.data.choices.length;
-                pc.data.choices.push({'id': 'choice' + newItem});
+                pc.data.choices.push({'id': 'choice' + newItem ,'vote':0});
                 console.log(pc.data.choices);
             };
     }]);
