@@ -26,9 +26,6 @@ router.post('/submit', function(req, res) {
         } else {
             var pollUrl = shortid.generate();
             poll.url = pollUrl;
-            for(var i=0;i<poll.choices.length;i++){
-                poll[i].vote=0;
-            }
 
             Poll.save(poll, function(err) {
                 if (err) {

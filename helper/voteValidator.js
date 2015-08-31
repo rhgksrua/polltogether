@@ -27,7 +27,7 @@ var voteValidator = function(poll, callback) {
             err = 'missing required key(s)';
         }
     });
-    if (poll.choices.length == 1) {
+    if (poll.length == 1) {
         err = 'should have only choices';
     }
 
