@@ -13,6 +13,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         var poll = this;
         poll.status = 'Waiting for response...';
         poll.failed = false;
+        poll.getError = false;
 
         // REMOVE when server api is works.
         //var id = "pollid";
@@ -69,9 +70,18 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         poll.getPoll = function() {
             $http.get('/poll/' + poll.id)
                 .then(function(response) {
-                    poll.poll = response.data[0];
-                    notifyObservers('getPoll');
-                    console.log('poll ajax success');
+                    poll.poll = response.data;
+                    if (poll.poll.error) {
+                        poll.getError = true;
+                        console.log(poll.poll.error);
+                        notifyObservers('getPoll');
+                    } else {
+                        // No server errors
+                        poll.getError = false;
+                        console.log(response.data);
+                        notifyObservers('getPoll');
+                        console.log('poll ajax success');
+                    }
                 }, function(response) {
                     poll.poll = 'test';
                     notifyObservers('getPoll');
@@ -122,6 +132,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          */
         var updatePolls = function() {
             vc.poll = voteService.poll;
+            vc.getError = voteService.getError;
         };
 
         /**

@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <h1 class="text-primary">Vote on poll (result.html)</h1>
+    <div class="well">
+        <h3 id="question">{{ rc.poll.question }}</h3>
+        <div class="container-fluid">
+            <div data-ng-repeat='(key, value) in rc.poll.choices'>
+                <div class='panel-body'>
+                    <div class='row'>
+                        <div class='col-xs-6'>
+                            {{ value.name }}
+                        </div>
+                        <div class='col-xs-6'>
+                            {{ value.vote }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
