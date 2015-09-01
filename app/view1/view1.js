@@ -35,7 +35,7 @@
            // console.log("ctrler loaded successfully")
 
             var pc = this;
-            pc.page=$location.host()+":"+$location.port();
+            pc.page=$location.host();
             pc.data = {choices: []};
             pc.ob = {};
             pc.test = "firstTest";
