@@ -16,7 +16,7 @@
                             {{ value.vote }}
                         </div>
                         <div class='col-xs-5'>
-                            <span class='result-bar' id='choice{{key}}' ng-style='{width: (value.vote / rc.poll.total * 100) + "%"}'></span>
+                            <span class='result-bar' id='choice{{key}}' ng-style='{width: ((value.vote) / rc.poll.total * 100) + 1 + "%"}'></span>
                         </div>
                     </div>
                 </div>
