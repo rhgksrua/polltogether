@@ -1,6 +1,9 @@
 <div class="container-fluid">
     <h1 class="text-primary">Vote on poll (result.html)</h1>
-    <div class="well">
+    <div class='alert alert-danger' ng-hide='rc.errors.exists'>
+        Poll not available
+    </div>
+    <div class="well" ng-show='rc.errors.exists'>
         <h3 id="question">{{ rc.poll.question }}</h3>
         <div class="container-fluid">
             <div data-ng-repeat='(key, value) in rc.poll.choices'>

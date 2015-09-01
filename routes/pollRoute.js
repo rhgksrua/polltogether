@@ -36,12 +36,17 @@ router.post('/submit', function(req, res) {
                     res.json(pollUrl);
                 }
             });
-
-
         } 
     }); 
 });
 
+/**
+ *
+ * URI /poll/id
+ *
+ * Returns poll for users to vote
+ *
+ **/
 router.get('/:id', function(req, res) {
     var poll = req.params;
     Poll.get(poll.id, function(err, data) {
@@ -61,37 +66,64 @@ router.get('/:id', function(req, res) {
     })
 });
 
+/**
+ *
+ * URI /poll/vote/submit
+ * 
+ * Accept votes and update poll results 
+ *
+ **/
 router.post('/vote/submit', function(req, res) {
-    console.log("vote requested ")
+    console.log("vote requested ");
     var poll = req.body;
     voteValidator(poll, function(err) {
         if (err) {
             res.json({error: err});
             console.dir(err);
-            console.log("vote validate not succeded")
-
+            console.log("vote validate not succeded");
         } else {
-
-//$inc:{choices[option].vote : 1}
-            console.log("vote validate succeded")
-            console.dir(poll)
+            console.log("vote validate succeded");
+            console.dir(poll);
             var option="choice"+poll.choice;
             console.log("vote index : "+option);
 
-            Poll.submitVote(poll,function (err, numUpdated) {
+            Poll.submitVote(poll, function (err, numUpdated) {
                 if (err) {
                     console.log(err);
+                    res.json({error: 'failed to submit'});
                 } else {
-                    console.log('updated ');
-                }});
-
-
-
-
+                    console.log('updated');
+                    res.json({message: 'vote submitted'});
+                }
+            });
         }
     });
 });
 
+/**
+ *
+ * URI /poll/:id/results
+ * 
+ * Returns poll results
+ *
+ **/
+router.get('/:id/results', function(req, res) {
+    var poll = req.params;
+    Poll.get(poll.id, function(err, data) {
+        if (err) {
+            console.log(err);
+            res.json({error: 'db error'});
+        } else {
+            if (data.length < 1) {
+                res.json({error: 'not found'});
+            } else {
+                console.log(poll.id);
+                console.log(data);
+                res.json(data[0]);
+            }
+        }
 
+    });
+});
 
 module.exports = router;

@@ -56,34 +56,45 @@ module.exports = {
             }
             var collection = db.collection('polls');
 
-
             collection.find({url:id}).toArray(function(err,result){
                 callback(err,result);
-
-            })
+            });
         });
     },
+    /**
+     * submitVote
+     *
+     * @param {Object} poll
+     * @param {function} callback
+     * @return {undefined}
+     */
     submitVote: function(poll, callback) {
-        var option="choice"+poll.choice;
+        var option = "choice" + poll.choice;
         this.mongo.connect(this.uri, function(err, db) {
             if (err) {
-                callback('failed to connect to db');
+                return callback('failed');
             }
             var collection = db.collection('polls');
-            collection.update({ "url": poll.id ,"choices.id": option},
-                {$inc:{"choices.$.vote":1 } },function (err, numUpdated) {
+            collection.update(
+                {"url": poll.id, "choices.id": option},
+                {$inc: {"choices.$.vote": 1}}, 
+                callback
+                /* might not be necessary
+                function (err, numUpdated) {
+                    err = true;
                     if (err) {
                         console.log(err);
                         callback(err);
                     } else if (numUpdated) {
+                        callback(err);
                         console.log('Updated Successfully %d document(s).', numUpdated);
                     } else {
+                        callback(err);
                         console.log('No document found with defined "find" criteria!');
-                    }});
+                    }
+                }
+                */
+            );
         });
     }
-
-
-
-
 }

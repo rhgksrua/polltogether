@@ -97,13 +97,23 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          * @return {undefined}
          */
         poll.submitVote = function(vote) {
+            console.log(vote);
             $http.post('/poll/vote/submit', vote)
                 .then(function(response) {
+                    if (response.data.error) {
+                        // server error
+                        console.log(response.data);
+                        poll.failed = true;
+                        poll.status = 'Vote Failed';
+                        notifyObservers('submitVote');
+                        return;
+                    }
                     console.log('vote submit ajax successful');
                     poll.failed = false;
                     poll.status = 'Vote Submitted!';
                     notifyObservers('submitVote');
                 }, function(response) {
+                    // ajax fail
                     console.log('vote submit ajax error');
                     poll.failed = true;
                     poll.status = 'Vote Failed!';
@@ -179,7 +189,6 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 vc.status = 'Need to pick one';
             } else if (vc.choice !== undefined) {
                 voteService.submitVote({id: vc.id, choice: vc.choice});
-                vc.poll.choices[vc.choice].vote++;
             }
         };
     }]);

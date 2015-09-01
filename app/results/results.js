@@ -12,6 +12,9 @@
         }])
         .service('resultService', ['$http', '$window', function($http, $window) {
             var rs = this;
+            rs.errors = {
+                exists: true
+            };
             rs.poll = {
                 question: null,
                 choices: []
@@ -20,15 +23,19 @@
                 rs.url = url;
             };
             rs.getPollResult = function() {
-                $http.post('/poll/' + rs.url + '/results')
+                rs.errors.exists = true;
+                $http.get('/poll/' + rs.url + '/results')
                     .then(function(response) {
-                       // console.log(response.data);
-                        rs.poll = response.data;
+                        if (response.data.error) {
+                            rs.errors.exists = false;
+                            return;
+                        }
+                        rs.poll.question = response.data.question;
+                        rs.poll.choices = response.data.choices;
                         console.log(rs.poll);
-                        rs.poll.total = totalVotes(rs.poll);
-                        // this callback will be called asynchronously
-                        // when the response is available
+                        rs.poll.total = rs.totalVotes(rs.poll);
                     }, function(response) {
+                        /*
                         var temp = {
                             question: 'fav animal',
                             choices: [
@@ -39,12 +46,13 @@
                                 {id: 'choice4', name: 'bird', vote: 3},
                             ]
                         };
-                        console.log('ajax error');
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
                         rs.poll.question = temp.question;
                         rs.poll.choices = temp.choices;
                         rs.poll.total = rs.totalVotes(rs.poll);
+                        */
+                        console.log('ajax error');
                     });
             };
             rs.totalVotes = function(data) {
@@ -53,8 +61,10 @@
                 }, 0);
             };
         }])
-        .controller('resultCtrl', ["$location", "resultService" ,function($location, resultService){
+        .controller('resultCtrl', ["$location", "resultService", "$routeParams" ,function($location, resultService, $routeParams){
             var rc = this;
+            rc.errors = resultService.errors;
+            resultService.getUrl($routeParams.id);
             rc.poll = resultService.poll;
             resultService.getPollResult();
 
