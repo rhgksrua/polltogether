@@ -125,7 +125,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         var vc = this;
         vc.choice = undefined;
         vc.id = $routeParams.id;
-        vc.status = 'Submitting...';
+        vc.status = 'Vote not registered from you yet...';
         vc.failed = false;
 
         // Set url for ajax request
