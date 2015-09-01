@@ -121,7 +121,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 });
         };
     }])
-    .controller('pollVoteCtrl', ['voteService', '$routeParams' , function(voteService, $routeParams) {
+    .controller('pollVoteCtrl', ['voteService', '$routeParams' ,"$location", function(voteService, $routeParams,$location) {
         var vc = this;
         vc.choice = undefined;
         vc.id = $routeParams.id;
@@ -191,4 +191,9 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 voteService.submitVote({id: vc.id, choice: vc.choice});
             }
         };
+
+        vc.resultsPage = function(){
+            var page="/vote/"+vc.id+"/results"
+            $location.path(page);
+        }
     }]);
