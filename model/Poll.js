@@ -79,21 +79,6 @@ module.exports = {
                 {"url": poll.id, "choices.id": option},
                 {$inc: {"choices.$.vote": 1}}, 
                 callback
-                /* might not be necessary
-                function (err, numUpdated) {
-                    err = true;
-                    if (err) {
-                        console.log(err);
-                        callback(err);
-                    } else if (numUpdated) {
-                        callback(err);
-                        console.log('Updated Successfully %d document(s).', numUpdated);
-                    } else {
-                        callback(err);
-                        console.log('No document found with defined "find" criteria!');
-                    }
-                }
-                */
             );
         });
     }
