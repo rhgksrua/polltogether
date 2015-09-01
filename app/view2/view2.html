@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <h1 class="text-primary">Vote on poll (View2.html)</h1>
+    <h1 class="text-primary">Vote</h1>
     <div class="alert alert-danger" ng-show='vc.getError'>
         Poll does not exist or cannot retreive poll
     </div>
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <button ng-click='vc.submitVote()' class='btn btn-default' data-toggle="modal" data-target="#myModal">Vote</button>
+        <button ng-click='vc.submitVote()' class='btn btn-default' data-toggle="modal" data-target="#myModal" ng-disabled='vc.submitted'>Vote</button>
     </div>
 </div>
 
@@ -32,8 +32,8 @@
                 <h4 ng-class="modal-title">{{ vc.status }}</h4>
             </div>
             <div class="modal-body">
-                <div class="container" data-dismiss="modal">
-                    <a ng-href="#/vote/{{vc.id}}/results" ng-hide='vc.failed' data-dismiss='modal'>Goto Result</a>
+                <div class="container">
+                    <a ng-href="#/vote/{{vc.id}}/results" ng-hide='vc.failed' target="_blank">Goto Result</a>
                 </div>
             </div>
             <div class="modal-body" ng-show='vc.failed'>

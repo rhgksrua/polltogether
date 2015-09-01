@@ -1,6 +1,7 @@
 .result-bar {
     display: inline-block;
-    background-color: red;
+    background-color: #D32F2F;
     width: 1%;
-    height: 10px;
+    height: 12px;
+    border-radius: 3px;
 }
