@@ -35,23 +35,6 @@
                         console.log(rs.poll);
                         rs.poll.total = rs.totalVotes(rs.poll);
                     }, function(response) {
-                        /*
-                        var temp = {
-                            question: 'fav animal',
-                            choices: [
-                                {id: 'choice0', name: 'cat', vote: 4},
-                                {id: 'choice1', name: 'dog', vote: 5},
-                                {id: 'choice2', name: 'cow', vote: 2},
-                                {id: 'choice3', name: 'horse', vote: 9},
-                                {id: 'choice4', name: 'bird', vote: 3},
-                            ]
-                        };
-                        // called asynchronously if an error occurs
-                        // or server returns response with an error status.
-                        rs.poll.question = temp.question;
-                        rs.poll.choices = temp.choices;
-                        rs.poll.total = rs.totalVotes(rs.poll);
-                        */
                         console.log('ajax error');
                     });
             };
@@ -67,7 +50,6 @@
             resultService.getUrl($routeParams.id);
             rc.poll = resultService.poll;
             resultService.getPollResult();
-
         }]);
 })();
 

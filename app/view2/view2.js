@@ -109,6 +109,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                         return;
                     }
                     console.log('vote submit ajax successful');
+                    poll.submitted = true;
                     poll.failed = false;
                     poll.status = 'Vote Submitted!';
                     notifyObservers('submitVote');
@@ -153,6 +154,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          */
         var submitStatus = function() {
             console.log('setting new status');
+            vc.submitted = voteService.submitted;
             vc.status = voteService.status;
             vc.failed = voteService.failed;
             if (vc.failed) {
@@ -183,7 +185,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          * @return {undefined}
          */
         vc.submitVote = function() {
-            vc.failed = false;
+            //vc.failed = false;
             if (vc.choice === undefined) {
                 vc.failed = true;
                 vc.status = 'Need to pick one';
@@ -192,8 +194,15 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             }
         };
 
+        /**
+         * resultsPage
+         * 
+         * show results page
+         *
+         * @return {undefined}
+         */
         vc.resultsPage = function(){
-            var page="/vote/"+vc.id+"/results"
+            var page = "/vote/" + vc.id + "/results";
             $location.path(page);
-        }
+        };
     }]);

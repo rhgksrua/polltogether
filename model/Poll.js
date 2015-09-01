@@ -16,15 +16,6 @@ module.exports = {
         return this;
     },
     /**
-     * connect
-     *
-     * Not implemented yet
-     *
-     * @return {undefined}
-     */
-    connect: function() {
-    },
-    /**
      * save
      *
      * @param {json} json received from user
@@ -34,12 +25,13 @@ module.exports = {
     save: function(poll, callback) {
         this.mongo.connect(this.uri, function(err, db) {
             if (err) {
-                callback('failed to connect to db');
+                callback(db, 'failed to connect to db');
+            } else {
+                var collection = db.collection('polls');
+                collection.insert(poll, {w: 1}, function(err, result) {
+                    callback(db, err);
+                });
             }
-            var collection = db.collection('polls');
-            collection.insert(poll, {w: 1}, function(err, result) {
-                callback(err);
-            });
         });
     },
     /**
@@ -52,13 +44,14 @@ module.exports = {
     get: function(id, callback) {
         this.mongo.connect(this.uri, function(err, db) {
             if (err) {
-                callback('failed to connect to db');
-            }
-            var collection = db.collection('polls');
+                callback(db, 'failed to connect to db');
+            } else {
+                var collection = db.collection('polls');
 
-            collection.find({url:id}).toArray(function(err,result){
-                callback(err,result);
-            });
+                collection.find({url: id}).toArray(function(err, result){
+                    callback(db, err, result);
+                });
+            }
         });
     },
     /**
@@ -72,14 +65,28 @@ module.exports = {
         var option = "choice" + poll.choice;
         this.mongo.connect(this.uri, function(err, db) {
             if (err) {
-                return callback('failed');
+                callback('failed');
+            } else {
+                var collection = db.collection('polls');
+                // need to change callback to anon func and call callback inside
+                collection.update(
+                    {"url": poll.id, "choices.id": option},
+                    {$inc: {"choices.$.vote": 1}}, 
+                    //callback
+                    function(err, numUpdated) {
+                        if (err) {
+                            console.log(err);
+                            callback(db, err);
+                        } else if (numUpdated) {
+                            console.log('updated suc %d document(s).', numUpdated);
+                            callback(db, err, numUpdated);
+                        } else {
+                            console.log('No document found with defined "find" criteria!');
+                            callback(db, err, numUpdate);
+                        }
+                    }
+                );
             }
-            var collection = db.collection('polls');
-            collection.update(
-                {"url": poll.id, "choices.id": option},
-                {$inc: {"choices.$.vote": 1}}, 
-                callback
-            );
         });
     }
-}
+};
