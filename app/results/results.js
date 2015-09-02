@@ -19,9 +19,24 @@
                 question: null,
                 choices: []
             };
+
+            /**
+             * getUrl
+             * grabs url as poll id
+             *
+             * @param {string} url
+             * @return {undefined}
+             */
             rs.getUrl = function(url) {
                 rs.url = url;
             };
+
+            /**
+             * getPollResult
+             * ajax request to for results
+             *
+             * @return {undefined}
+             */
             rs.getPollResult = function() {
                 rs.errors.exists = true;
                 $http.get('/poll/' + rs.url + '/results')
@@ -38,6 +53,14 @@
                         console.log('ajax error');
                     });
             };
+
+            /**
+             * totalVotes
+             * returns total number of votes
+             *
+             * @param {object} data
+             * @return {integer}
+             */
             rs.totalVotes = function(data) {
                 return data.choices.reduce(function(pv, cv) {
                     return pv + cv.vote;

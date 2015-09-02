@@ -15,9 +15,6 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         poll.failed = false;
         poll.getError = false;
 
-        // REMOVE when server api is works.
-        //var id = "pollid";
-
         /**
          * setId
          * url to get poll id for ajax request
@@ -52,7 +49,8 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         /**
          * notifyObservers
          * executes callback where needed.
-         *
+         * 
+         * @param  {string} name
          * @return {undefined}
          */
         var notifyObservers = function(name) {
