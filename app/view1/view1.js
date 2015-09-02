@@ -12,7 +12,7 @@
         }])
         .service('pollService', ['$http', '$window', function($http, $window) {
             var poll = this;
-            poll.ob = {uniqueId: 0};
+            poll.ob = {uniqueId: 0 , submitted: false};
             console.log("angular service");
             poll.createPoll = function(Poll){
                 //Ajax post poll to back end
@@ -21,11 +21,13 @@
                     .then(function(response) {
                        // console.log(response.data);
                         poll.ob.uniqueId = response.data;
+                        poll.ob.submitted=true;
                         console.log(poll.ob.uniqueId);
                         // this callback will be called asynchronously
                         // when the response is available
                     }, function(response) {
                         console.log('ajax error');
+
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
                     });
