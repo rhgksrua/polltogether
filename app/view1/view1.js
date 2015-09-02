@@ -16,10 +16,8 @@
             console.log("angular service");
             poll.createPoll = function(Poll){
                 //Ajax post poll to back end
-                console.dir(Poll);
                 $http.post('/poll/submit', Poll)
                     .then(function(response) {
-                       // console.log(response.data);
                         poll.ob.uniqueId = response.data;
                         poll.ob.submitted=true;
                         console.log(poll.ob.uniqueId);
@@ -34,7 +32,6 @@
             };
         }])
         .controller('pollCtrl', ["$location", "pollService" ,function($location, pollService){
-           // console.log("ctrler loaded successfully")
 
             var pc = this;
             pc.page=$location.host();
@@ -42,7 +39,6 @@
             pc.ob = {};
             pc.test = "firstTest";
             pc.data.choices.push({'id': 'choice0' , "vote":0});
-            //console.log(pc.data.choices)
             pc.ob = pollService.ob;
 
             pc.submitNewPoll = function(){

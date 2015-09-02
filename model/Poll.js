@@ -18,8 +18,8 @@ module.exports = {
     /**
      * save
      *
-     * @param {json} json received from user
-     * @param {function} callback(err, data)
+     * @param {json} poll - json received from user
+     * @param {function} callback - callback(err, data)
      * @return {undefined} undefined
      */
     save: function(poll, callback) {
