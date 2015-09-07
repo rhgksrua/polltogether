@@ -4,7 +4,7 @@
 angular.module('pollApp.pollVote', ['ngRoute'])
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/vote/:id', {
-            templateUrl: 'view2/view2.html',
+            templateUrl: 'vote/vote.html',
             controller: 'pollVoteCtrl',
             controllerAs: 'vc'
         });
@@ -45,7 +45,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          */
         poll.submitVote = function(vote) {
             console.log(vote);
-            return $http.post('/xpoll/vote/submit', vote)
+            return $http.post('/poll/vote/submit', vote)
                 .then(function(response) {
                     return response;
                 });

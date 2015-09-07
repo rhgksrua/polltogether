@@ -5,7 +5,7 @@
 
         .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/create', {
-                templateUrl: 'view1/view1.html',
+                templateUrl: 'create/create.html',
                 controller: 'pollCtrl',
                 controllerAs:'pc'
             });
