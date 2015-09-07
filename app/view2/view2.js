@@ -66,24 +66,9 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          * @return {undefined}
          */
         poll.getPoll = function() {
-            $http.get('/poll/' + poll.id)
+            return $http.get('/poll/' + poll.id)
                 .then(function(response) {
-                    poll.poll = response.data;
-                    if (poll.poll.error) {
-                        poll.getError = true;
-                        console.log(poll.poll.error);
-                        notifyObservers('getPoll');
-                    } else {
-                        // No server errors
-                        poll.getError = false;
-                        console.log(response.data);
-                        notifyObservers('getPoll');
-                        console.log('poll ajax success');
-                    }
-                }, function(response) {
-                    poll.poll = 'test';
-                    notifyObservers('getPoll');
-                    console.log('poll ajax fail');
+                    return response;
                 });
         };
 
@@ -131,7 +116,12 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         voteService.setId(vc.id);
 
         // get poll data
-        voteService.getPoll();
+        voteService.getPoll().then(function(response) {
+            console.log('ajax success');
+            vc.poll = response.data;
+        }).then(null, function(response) {
+            console.log('something wrong', response);
+        });
         
         /**
          * updatePolls
