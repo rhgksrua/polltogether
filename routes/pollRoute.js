@@ -1,4 +1,6 @@
 // pollRoute.js
+/*jslint node: true */
+'use strict';
 
 var express = require('express');
 var router = express.Router();
@@ -34,7 +36,7 @@ router.post('/submit', function(req, res) {
                     console.log('closing db');
                     db.close();
                     
-                }else {
+                } else {
                     console.log('sending json...');
                     res.json(pollUrl);
                     console.log('closing db');

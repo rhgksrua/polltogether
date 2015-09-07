@@ -11,9 +11,6 @@ angular.module('pollApp.pollVote', ['ngRoute'])
     }])
     .service('voteService', ['$http', function($http) {
         var poll = this;
-        poll.status = 'Waiting for response...';
-        poll.failed = false;
-        poll.getError = false;
 
         /**
          * setId
@@ -48,7 +45,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
          */
         poll.submitVote = function(vote) {
             console.log(vote);
-            return $http.post('/poll/vote/submit', vote)
+            return $http.post('/xpoll/vote/submit', vote)
                 .then(function(response) {
                     return response;
                 });
@@ -64,7 +61,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         vc.id = $routeParams.id;
 
         // status mesasge on modal
-        vc.status = 'Submitting...';
+        vc.status = 'Waiting for response...';
 
         // vote success/fail status
         vc.failed = false;
@@ -106,6 +103,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 vc.failed = true;
                 vc.status = 'Need to pick one';
             } else if (vc.choice !== undefined) {
+                vc.status = 'Submitting...';
                 voteService.submitVote({id: vc.id, choice: vc.choice})
                     .then(function(response) {
                         // success
@@ -114,6 +112,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                         vc.submitted = true;
                     }).then(null, function(response) {
                         // failed
+                        vc.status = 'Vote submission failed';
                         vc.failed = true;
                     });
             }
