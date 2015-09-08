@@ -53,6 +53,11 @@
                 pc.data.choices.push({'id': 'choice' + newItem ,'vote':0});
                 console.log(pc.data.choices);
             };
+
+            pc.resetForm = function() {
+                console.log('reset form');
+                pc.data = {choices: [{'id': 'choice0' , "vote": 0}]};
+            };
     }]);
 })();
 

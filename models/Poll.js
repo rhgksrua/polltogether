@@ -14,6 +14,7 @@ var PollSchema = new Schema({
     }],
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now},
+    voted: [String]
 });
 
 // The name of collection will be 'polls' by default unless collection

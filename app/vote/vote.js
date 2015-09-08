@@ -106,6 +106,13 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 vc.status = 'Submitting...';
                 voteService.submitVote({id: vc.id, choice: vc.choice})
                     .then(function(response) {
+                        console.log(response.data.error);
+                        if (response.data.error) {
+                            vc.status = response.data.error;
+                            vc.failed = true;
+                            vc.submitted = false;
+                            return;
+                        }
                         // success
                         vc.status = 'Vote submitted!';
                         vc.failed = false;

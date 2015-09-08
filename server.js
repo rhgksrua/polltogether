@@ -1,4 +1,6 @@
 // PollApp server
+/*jslint node: true*/
+'use strict';
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -16,6 +18,8 @@ var port = process.env.PORT || 5000;
 // Serves static files
 app.use(express.static('app'));
 app.use(bodyParser.json());
+
+app.enable('trust proxy');
 
 /******************************************************************************
 *
