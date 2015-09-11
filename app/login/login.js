@@ -1,40 +1,37 @@
 (function(){
     'use strict';
 
-    angular.module('pollApp.register', ['ngRoute','ngAnimate','ngMessages'])
+    angular.module('pollApp.login', ['ngRoute','ngAnimate','ngMessages'])
 
         .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/register', {
-                templateUrl: 'register/register.html',
-                controller: 'registerCtrl',
-                controllerAs:'rc'
+            $routeProvider.when('/login', {
+                templateUrl: 'login/login.html',
+                controller: 'loginCtrl',
+                controllerAs:'lc'
             });
         }])
-        .service('registerService', ['$http', '$window', function($http, $window) {
+        .service('loginService', ['$http', '$window', function($http, $window) {
             var poll = this;
-            poll.register = function(User){
+            poll.login = function(User){
                 //Ajax post poll to back end
-                return $http.post('/register', User)
+                return $http.post('/login', User)
                     .then(function(response) {
                         // do stuff with response here
                         return response;
                     });
             };
         }])
-        .controller('registerCtrl', ["registerService" ,function(registerService){
-            var rc = this;
+        .controller('loginCtrl', ["loginService" ,function(loginService){
+            var lc = this;
             // register
-            rc.user = {};
-
-            rc.register = function(user) {
-                console.log('register');
-                console.log(user);
-                registerService.register(user)
+            lc.user = {};
+            lc.login = function(user) {
+                loginService.login(user)
                     .then(function(response) {
                         if (response.data.error) {
                             throw new Error('SERVER ERROR');
                         }
-                        console.log('registered!!!!!!!!!!!!!!!');
+                        console.log('logged in');
                         // redirect user to profile page
                     })
                     .then(null, function(response) {
@@ -42,22 +39,6 @@
                     });
             };
 
-        }])
-        .directive('compareTo', function() {
-            return {
-                require: 'ngModel',
-                scope: {
-                    otherModelValue: '=compareTo'
-                },
-                link: function(scope, element, attributes, ngModel) {
-                    ngModel.$validators.compareTo = function(modelValue) {
-                        return modelValue == scope.otherModelValue;
-                    };
-                    scope.$watch('otherModelValue', function() {
-                        ngModel.$validate();
-                    });
-                }
-            };
-        });
+        }]);
 })();
 
