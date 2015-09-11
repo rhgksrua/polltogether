@@ -12,10 +12,23 @@
         }])
         .service('registerService', ['$http', '$window', function($http, $window) {
             var poll = this;
-            poll.register = function(User){
+            poll.sanitize = function(user) {
+                var sanitizedUser = {
+                    username: user.username,
+                    email: user.email,
+                    password: user.password
+                };
+                return sanitizedUser;
+                
+            };
+            poll.register = function(user){
+                user = poll.sanitize(user);
+                console.log('sanitized user', user);
+
                 //Ajax post poll to back end
-                return $http.post('/register', User)
+                return $http.post('/register', user)
                     .then(function(response) {
+                        console.log('response data', response.data);
                         // do stuff with response here
                         return response;
                     });
@@ -44,6 +57,7 @@
 
         }])
         .directive('compareTo', function() {
+            // confirm password directive
             return {
                 require: 'ngModel',
                 scope: {

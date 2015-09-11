@@ -35,7 +35,7 @@ app.enable('trust proxy');
 
 app.use('/', indexRoute);
 app.use('/poll', pollRoute);
-app.user('/user', userRoute);
+app.use('/user', userRoute);
 
 
 /******************************************************************************
