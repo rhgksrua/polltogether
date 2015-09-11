@@ -6,9 +6,15 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 
+// DB setup
+var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
+var mongoose = require('mongoose');
+mongoose.connect(mongoURI);
+
 // Routes
 var indexRoute = require('./routes/indexRoute');
 var pollRoute = require('./routes/pollRoute');
+var userRoute = require('./routes/userRoute');
 
 // Separate production and local.
 // var environment = process.env.POLLENV || 'local';
@@ -29,6 +35,7 @@ app.enable('trust proxy');
 
 app.use('/', indexRoute);
 app.use('/poll', pollRoute);
+app.user('/user', userRoute);
 
 
 /******************************************************************************

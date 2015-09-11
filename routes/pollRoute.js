@@ -4,9 +4,9 @@
 
 var express = require('express');
 var router = express.Router();
-var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
-var mongoose = require('mongoose');
-mongoose.connect(mongoURI);
+//var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
+//var mongoose = require('mongoose');
+//mongoose.connect(mongoURI);
 var Poll = require('../models/Poll');
 var shortid = require('shortid');
 
