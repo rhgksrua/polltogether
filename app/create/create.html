@@ -17,7 +17,13 @@
 
             <div class="form-group" ng-class="{ 'has-error' : userForm['choice'+$index].$invalid && userForm['choice'+$index].$dirty }" data-ng-repeat="ans in pc.data.choices">
                 <label>Choice</label>
-                <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="1">
+                <div class='input-group'>
+                    <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="1">
+                    <span class="input-group-btn">
+                        <button class='btn btn-warning' ng-show='$index === 0'>Required</button>
+                        <button class='btn btn-warning' ng-hide='$index === 0'>Remove</button>
+                    </span>
+                </div>
                 <div class="help-block" ng-messages="userForm['choice'+$index].$error" ng-show="userForm['choice'+$index].$dirty">
                     <p class="help-block" ng-message="required">option is required</p>
                     <p class="help-block" ng-message="minlength">option must be more than 1 chars</p>

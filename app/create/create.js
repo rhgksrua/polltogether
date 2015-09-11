@@ -12,7 +12,17 @@
         }])
         .service('pollService', ['$http', '$window', function($http, $window) {
             var poll = this;
+            var validate = function(Poll) {
+                Poll.choices = Poll.choices.filter(function(el) {
+                    console.log('el');
+                    return el.name.length > 0;
+                });
+                return Poll;
+            };
             poll.createPoll = function(Poll){
+                Poll = validate(Poll);
+                console.log('validated poll', Poll);
+
                 //Ajax post poll to back end
                 return $http.post('/poll/submit', Poll)
                     .then(function(response) {
