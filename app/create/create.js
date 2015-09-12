@@ -30,12 +30,43 @@
                         return response;
                     });
             };
+            poll.getEmail = function(token) {
+                return $http.post('/user/email')
+                    .then(function(response) {
+                        console.log('response email', response.data);
+                        return response.data;
+                    });
+
+            };
         }])
-        .controller('pollCtrl', ["$location", "pollService" ,function($location, pollService){
+        .controller('pollCtrl', ["$location", "pollService", '$window' ,function($location, pollService, $window){
             var pc = this;
             pc.host = $location.host();
             pc.data = {choices: []};
             pc.data.choices.push({'id': 'choice0' , "vote": 0});
+            pc.email = '';
+
+            // check for jwt
+            pc.checkJwt = function() {
+                var token = $window.localStorage['auth-token'];
+                if (token) {
+                    console.log('jwt found');
+                    return token;
+                }
+                console.log('jwt not found');
+                return false;
+            };
+            var jwt = pc.checkJwt();
+            if (jwt) {
+                pollService.getEmail(jwt)
+                    .then(function(response) {
+                        pc.email = response;
+                    }).then(null, function(response) {
+                        console.log('error', response);
+                        pc.serverError = true;
+                        
+                    });
+            }
 
             pc.submitNewPoll = function(){
                 pollService.createPoll(pc.data)

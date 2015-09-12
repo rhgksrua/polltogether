@@ -3,11 +3,6 @@
     <div class="well">
         <form novalidate class='register-form' name='registerForm'>
             <div class='form-group' ng-class="{ 'has-error': registerForm.email.$invalid && registerForm.email.$dirty }">
-                <label>username</label>
-                <input type='text' class='form-control' name='username' ng-model='user.username' required />
-                <div class='help-block' ng-messages='registerForm.username.$error' ng-show='registerForm.username.$touched'>
-                    <p class='help-block' ng-message='required'>username is required</p>
-                </div>
                 <label>e-mail</label>
                 <input type='text' class='form-control' name='email' ng-model='user.email' required />
                 <div class='help-block' ng-messages='registerForm.email.$error' ng-show='registerForm.email.$touched' role='alert'>

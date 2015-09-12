@@ -4,7 +4,15 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
 var app = express();
+
+require('./config/passport')(passport);
+
 
 // DB setup
 var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
@@ -24,6 +32,17 @@ var port = process.env.PORT || 5000;
 // Serves static files
 app.use(express.static('app'));
 app.use(bodyParser.json());
+/*
+app.use(session({
+    secret: 'abcdefg',
+    saveUninitialized: true,
+    resave: true
+}));
+*/
+app.use(passport.initialize());
+//app.use(expressJwt({secret: 'pass'}).unless({path: ['/', '/login', '/register']}));
+            
+//app.use(passport.session());
 
 app.enable('trust proxy');
 
@@ -32,6 +51,14 @@ app.enable('trust proxy');
 * ROUTES
 *
 *******************************************************************************/
+
+app.use(function(err, req, res, next) {
+    console.log('token error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    console.log(req.user);
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send('invalid token...');
+    }
+});
 
 app.use('/', indexRoute);
 app.use('/poll', pollRoute);

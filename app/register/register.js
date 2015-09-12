@@ -11,30 +11,54 @@
             });
         }])
         .service('registerService', ['$http', '$window', function($http, $window) {
-            var poll = this;
-            poll.sanitize = function(user) {
+            var reg = this;
+            var store = $window.localStorage;
+            var key = 'auth-token';
+            reg.setToken = function(token) {
+                if (token) {
+                    store.setItem(key, token);
+                } else {
+                    store.removeItem(key);
+                }
+            };
+            reg.getToken = function() {
+                return store.getItem(key);
+            };
+            reg.sanitize = function(user) {
                 var sanitizedUser = {
-                    username: user.username,
                     email: user.email,
                     password: user.password
                 };
                 return sanitizedUser;
-                
             };
-            poll.register = function(user){
-                user = poll.sanitize(user);
+            reg.register = function(user){
+                user = reg.sanitize(user);
                 console.log('sanitized user', user);
 
                 //Ajax post poll to back end
                 return $http.post('/register', user)
                     .then(function(response) {
                         console.log('response data', response.data);
+                        
                         // do stuff with response here
                         return response;
                     });
             };
         }])
-        .controller('registerCtrl', ["registerService" ,function(registerService){
+        .factory('AuthInterceptor', function AuthInterceptor(AuthTokenFactory) {
+            return {
+                request: addToken
+            };
+            function addToken(config) {
+                var token = registerService.getToken();
+                if (token) {
+                    config.headers = config.headers || {};
+                    config.headers.Authorization = 'Bearer ' + token;
+                }
+                return config;
+            }
+        })
+        .controller('registerCtrl', ["registerService", function(registerService){
             var rc = this;
             // register
             rc.user = {};
@@ -46,9 +70,15 @@
                     .then(function(response) {
                         if (response.data.error) {
                             throw new Error('SERVER ERROR');
+                        } else if (response.data.exists) {
+                            rc.emailExists = true;
+                            return 'email exists';
                         }
                         console.log('registered!!!!!!!!!!!!!!!');
+                        registerService.setToken(response.data.token);
+                        console.log('INFO', response.data.info);
                         // redirect user to profile page
+                        return response;
                     })
                     .then(null, function(response) {
                         console.log('error', response);
