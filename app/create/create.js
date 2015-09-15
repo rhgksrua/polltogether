@@ -46,7 +46,7 @@
             pc.data.choices.push({'id': 'choice0' , "vote": 0});
             pc.email = '';
 
-            // check for jwt
+            // check for jwt to get email address
             pc.checkJwt = function() {
                 var token = $window.localStorage['auth-token'];
                 if (token) {

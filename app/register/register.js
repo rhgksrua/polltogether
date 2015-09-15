@@ -58,7 +58,7 @@
                 return config;
             }
         })
-        .controller('registerCtrl', ["registerService", function(registerService){
+        .controller('registerCtrl', ["registerService", '$location', function(registerService, $location){
             var rc = this;
             // register
             rc.user = {};
@@ -72,11 +72,18 @@
                             throw new Error('SERVER ERROR');
                         } else if (response.data.exists) {
                             rc.emailExists = true;
-                            return 'email exists';
+                            throw new Error('email exists');
                         }
-                        console.log('registered!!!!!!!!!!!!!!!');
-                        registerService.setToken(response.data.token);
-                        console.log('INFO', response.data.info);
+
+                        if (response.data.token) {
+                            rc.emailExists = false;
+                            console.log('registered');
+                            registerService.setToken(response.data.token);
+                            console.log('INFO', response.data.info);
+                            rc.registerSuccess = true;
+                            $location.path('/');
+                        }
+                        
                         // redirect user to profile page
                         return response;
                     })

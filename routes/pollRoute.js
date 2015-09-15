@@ -7,7 +7,9 @@ var router = express.Router();
 //var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
 //var mongoose = require('mongoose');
 //mongoose.connect(mongoURI);
+var jwt = require('express-jwt');
 var Poll = require('../models/Poll');
+var User = require('../models/User');
 var shortid = require('shortid');
 
 /**
@@ -19,18 +21,40 @@ var shortid = require('shortid');
  * - Create unique url for each poll
  *
  **/
-router.post('/submit', function(req, res) {
+router.post('/submit', jwt({secret: 'pass'}), function(req, res) {
     var rawPoll = req.body;
+    var token = req.headers.authorization.split(' ')[1];
+    console.log('- token:', token);
+    console.log(req.user.email);
+    var email = req.user.email;
     rawPoll.url = shortid.generate();
-    var poll = new Poll(rawPoll);
-    poll.save(function(err, data) {
+
+    var poll;
+
+    // get user id
+    User.findOne({'email': email}, function(err, user) {
+        console.log('user: ', user);
         if (err) {
-            res.json({error: 'db error'});
-            return console.log(err);
+            // db error
+            return res.json({error: 'db error'});
         }
-        res.json(data.url);
-        return console.log(data);
+        if (user) {
+            // user exists add id to poll
+            rawPoll.user_id = user._id;
+        }
+        poll = new Poll(rawPoll);
+        poll.save(function(err, data) {
+            if (err) {
+                res.json({error: 'db error'});
+                return console.log(err);
+            }
+            if (data) {
+                return res.json(data.url);
+            }
+        });
+
     });
+    console.log('end of submit');
 
 });
 

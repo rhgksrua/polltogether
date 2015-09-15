@@ -6,6 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
@@ -32,17 +33,18 @@ var port = process.env.PORT || 5000;
 // Serves static files
 app.use(express.static('app'));
 app.use(bodyParser.json());
-/*
+
 app.use(session({
     secret: 'abcdefg',
     saveUninitialized: true,
     resave: true
 }));
-*/
+
 app.use(passport.initialize());
 //app.use(expressJwt({secret: 'pass'}).unless({path: ['/', '/login', '/register']}));
             
-//app.use(passport.session());
+app.use(passport.session());
+app.use(flash());
 
 app.enable('trust proxy');
 

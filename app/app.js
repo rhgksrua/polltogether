@@ -23,4 +23,22 @@ angular.module('pollApp', [
             }
         };
         return tokenInjector;
+    }])
+    .service('tokenService', ['$window', function($window) {
+        var ts = this;
+        var store = $window.localStorage;
+        var key = 'auth-token';
+        ts.test = function() {
+            console.log('token works');
+        };
+        ts.setToken = function(token) {
+            if (token) {
+                store.setItem(key, token);
+            } else {
+                store.removeItem(key);
+            }
+        };
+        ts.getToken = function() {
+            return store.getItem(key);
+        };
     }]);

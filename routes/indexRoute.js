@@ -27,8 +27,33 @@ router.post('/test', authenticate, function(req, res) {
     res.json({email: email});
 });
 
-router.post('/login', function(req, res) {
-    res.json('login api');
+router.post('/login', function(req, res, next) {
+    console.log('--- loglin');
+    
+    passport.authenticate('local-login', function(err, user, info) {
+        console.log('- start auth');
+        if (err) {
+            console.log('- db error');
+            res.json({error: 'db error'});
+            return next(err);
+        }
+
+        if (!user) {
+            console.log('- user: ', user);
+            console.log('- user does not exist');
+            return res.send({error: 'login error error error'});
+        }
+
+        console.log('sending user.....................', user);
+
+        // creating token
+        var token = jwt.sign({
+            email: user.email
+        }, 'pass');
+
+        return res.json({token: token, email: user.email});
+
+    })(req, res, next);
 });
 
 // register api endpoint
@@ -38,14 +63,11 @@ router.post('/register', function(req, res, next) {
             res.json({error: 'db error'});
             return next(err);
         }
-        console.log(user);
 
         // email exists
         if (!user) {
             return res.send({exists: true});
         }
-
-        console.log('sending user.....................', user);
 
         // creating token
         var token = jwt.sign({

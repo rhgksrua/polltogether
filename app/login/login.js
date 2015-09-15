@@ -13,6 +13,7 @@
         .service('loginService', ['$http', '$window', function($http, $window) {
             var poll = this;
             poll.login = function(User){
+                console.log('user: ', User);
                 //Ajax post poll to back end
                 return $http.post('/login', User)
                     .then(function(response) {
@@ -21,18 +22,25 @@
                     });
             };
         }])
-        .controller('loginCtrl', ["loginService" ,function(loginService){
+        .controller('loginCtrl', ["loginService", '$location', 'tokenService', function(loginService, $location, tokenService){
             var lc = this;
-            // register
+
+            console.log('login screen');
             lc.user = {};
             lc.login = function(user) {
+                console.log('--- user:', user);
                 loginService.login(user)
                     .then(function(response) {
                         if (response.data.error) {
+                            console.log(response.data.error);
                             throw new Error('SERVER ERROR');
                         }
                         console.log('logged in');
+                        console.log(response.data);
+                        tokenService.setToken(response.data.token);
+                        $location.path('/');
                         // redirect user to profile page
+
                     })
                     .then(null, function(response) {
                         console.log('error', response);
