@@ -41,11 +41,12 @@
                     .then(function(response) {
                         if (response.data.error) {
                             console.log(response.data.error);
-                            throw new Error('SERVER ERROR');
+                            lc.loginError = true;
+                            throw new Error('login error');
                         }
+                        lc.loginError = false;
                         tokenService.setToken(response.data.token);
-                        //userService.setEmail(response.data.email);
-                        //$scope.share.email = 'login email';
+                        console.log('------------ user', response.data);
                         $scope.$emit('setEmail', response.data.email, response.data.username);
                         $location.path('/create');
                     })

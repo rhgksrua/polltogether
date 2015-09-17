@@ -36,7 +36,7 @@ router.get('/userinfo', expressjwt({secret: 'pass'}), authenticate, function(req
 });
 
 router.post('/login', function(req, res, next) {
-    console.log('--- loglin');
+    console.log('--- log in');
     
     passport.authenticate('local-login', function(err, user, info) {
         console.log('- start auth');
@@ -60,7 +60,13 @@ router.post('/login', function(req, res, next) {
             username: user.username
         }, 'pass');
 
-        return res.json({token: token, email: user.email});
+        var retJSON = {
+            token: token,
+            email: user.email,
+            username: user.username
+        };
+
+        return res.json(retJSON);
 
     })(req, res, next);
 });

@@ -62,7 +62,7 @@ angular.module('pollApp', [
                 });
         };
     }])
-    .controller('indexController', ['userService', 'tokenService', '$scope',  function(userService, tokenService, $scope) {
+    .controller('indexController', ['userService', 'tokenService', '$scope', '$timeout', '$location', '$route', function(userService, tokenService, $scope, $timeout, $location, $route) {
         var ic = this;
 
         $scope.share = {
@@ -72,9 +72,13 @@ angular.module('pollApp', [
         };
 
         ic.logout = function() {
-            console.log('loggout');
             tokenService.removeToken();
             $scope.share.email = '';
+            ic.loggedOut = true;
+            $timeout(function() {
+                ic.loggedOut = false;
+
+            }, 3000);
 
         };
 
@@ -82,6 +86,7 @@ angular.module('pollApp', [
             userService.getEmail()
                 .then(function(response) {
                     console.log('user found');
+                    console.log(response.data);
                     $scope.share.email = response.data.email;
                     $scope.share.username = response.data.username;
                 }).

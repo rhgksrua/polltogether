@@ -17,12 +17,9 @@
 
             <button type='submit' class='btn btn-default' ng-click='lc.login(user)'>Login</button>
         </form>
-        <div>
-            {{ user.email }}
-        </div>
-        <div>
-            {{ user.password }}
-        </div>
+    </div>
+    <div ng-show='lc.loginError' class='alert alert-danger'>
+        Login error.  Please try again.
     </div>
 </div>
 

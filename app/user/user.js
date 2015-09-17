@@ -24,13 +24,18 @@
         .controller('userCtrl', ["$location", "userPollService", "$routeParams" ,function($location, userPollService, $routeParams){
             var uc = this;
 
-            uc.pollList = [];
-
             var user = $routeParams.user;
+            uc.user = user;
 
             userPollService.getPolls(user)
                 .then(function(response) {
-                    console.log(response.data);
+                    console.log(response.data.polls);
+                    if (response.data.error) {
+                        throw new Error(response.data.error);
+                    }
+                    if (response.data.polls.length > 0) {
+                        uc.pollList = response.data.polls;
+                    }
                     return response;
                 })
                 .then(null, function(response) {
