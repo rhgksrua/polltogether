@@ -39,13 +39,17 @@
 
             };
         }])
-        .controller('pollCtrl', ["$location", "pollService", '$window' ,function($location, pollService, $window){
+        .controller('pollCtrl', ["$location", "pollService", '$window', '$scope', function($location, pollService, $window, $scope){
             var pc = this;
             pc.host = $location.host();
             pc.data = {choices: []};
             pc.data.choices.push({'id': 'choice0' , "vote": 0});
             pc.email = '';
+           
 
+
+
+            /*
             // check for jwt to get email address
             pc.checkJwt = function() {
                 var token = $window.localStorage['auth-token'];
@@ -67,6 +71,7 @@
                         
                     });
             }
+            */
 
             pc.submitNewPoll = function(){
                 pollService.createPoll(pc.data)

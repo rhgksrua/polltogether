@@ -14,18 +14,9 @@
             var reg = this;
             var store = $window.localStorage;
             var key = 'auth-token';
-            reg.setToken = function(token) {
-                if (token) {
-                    store.setItem(key, token);
-                } else {
-                    store.removeItem(key);
-                }
-            };
-            reg.getToken = function() {
-                return store.getItem(key);
-            };
             reg.sanitize = function(user) {
                 var sanitizedUser = {
+                    username: user.username,
                     email: user.email,
                     password: user.password
                 };
@@ -58,14 +49,21 @@
                 return config;
             }
         })
-        .controller('registerCtrl', ["registerService", '$location', function(registerService, $location){
+        .controller('registerCtrl', ["registerService", '$location', 'tokenService', 'userService', '$route', '$scope', function(registerService, $location, tokenService, userService, $route, $scope){
             var rc = this;
             // register
             rc.user = {};
 
+            $scope.share.email = '';
+
+            if (tokenService.getToken()) {
+                console.log('token found');
+                $location.path('/');
+                return;
+            }
+            console.log('token not found');
+
             rc.register = function(user) {
-                console.log('register');
-                console.log(user);
                 registerService.register(user)
                     .then(function(response) {
                         if (response.data.error) {
@@ -78,9 +76,13 @@
                         if (response.data.token) {
                             rc.emailExists = false;
                             console.log('registered');
-                            registerService.setToken(response.data.token);
-                            console.log('INFO', response.data.info);
+                            console.log(response.data);
+                            //registerService.setToken(response.data.token);
+                            tokenService.setToken(response.data.token);
+                            //$scope.share.email = response.data.email;
+                            $scope.$emit('setEmail', response.data.email, response.data.username);
                             rc.registerSuccess = true;
+
                             $location.path('/');
                         }
                         

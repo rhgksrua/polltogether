@@ -6,7 +6,10 @@ var express = require('express');
 var passport = require('passport');
 var User = require('../models/User');
 var jwt = require('jsonwebtoken');
+var expressjwt = require('express-jwt');
 var router = express.Router();
+
+var userRegister = require('../config/userRegister');
 
 
 /**
@@ -25,6 +28,11 @@ router.post('/test', authenticate, function(req, res) {
     var email = req.user.email;
     console.log('test req user email', req.user.email);
     res.json({email: email});
+});
+
+router.get('/userinfo', expressjwt({secret: 'pass'}), authenticate, function(req, res) {
+    console.log('user', req.user);
+    res.json({email: req.user.email, username: req.user.username});
 });
 
 router.post('/login', function(req, res, next) {
@@ -48,7 +56,8 @@ router.post('/login', function(req, res, next) {
 
         // creating token
         var token = jwt.sign({
-            email: user.email
+            email: user.email,
+            username: user.username
         }, 'pass');
 
         return res.json({token: token, email: user.email});
@@ -56,8 +65,10 @@ router.post('/login', function(req, res, next) {
     })(req, res, next);
 });
 
+router.post('/register', userRegister);
+
 // register api endpoint
-router.post('/register', function(req, res, next) {
+router.post('/registerx', function(req, res, next) {
     passport.authenticate('local-register', function(err, user, info) {
         if (err) {
             res.json({error: 'db error'});
@@ -79,10 +90,16 @@ router.post('/register', function(req, res, next) {
     })(req, res, next);
 });
 
-function authenticate(req, res, next) {
-    var body = req.user;
-    console.log('body user', body);
-    next();
+router.post('/registernew', function(req, res) {
+    console.log(req.body);
+    res.json(req.body);
+
+});
+
+function authenticate(err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.json({error: 'authorization failed'});
+    }
 }
 
 module.exports = router;

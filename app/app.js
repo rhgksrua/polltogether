@@ -7,12 +7,14 @@ angular.module('pollApp', [
         'pollApp.pollVote',
         'pollApp.pollResult',
         'pollApp.register',
-        'pollApp.login'
+        'pollApp.login',
+        'pollApp.user'
     ])
     .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
         $httpProvider.interceptors.push('tokenInjector');
         $routeProvider.otherwise({redirectTo: '/create'});
-    }]).factory('tokenInjector', ['$window', function($window) {
+    }])
+    .factory('tokenInjector', ['$window', function($window) {
         var tokenInjector = {
             request: function(config) {
                 var token = $window.localStorage['auth-token'];
@@ -31,6 +33,9 @@ angular.module('pollApp', [
         ts.test = function() {
             console.log('token works');
         };
+        ts.removeToken = function() {
+            store.removeItem(key);
+        };
         ts.setToken = function(token) {
             if (token) {
                 store.setItem(key, token);
@@ -41,4 +46,54 @@ angular.module('pollApp', [
         ts.getToken = function() {
             return store.getItem(key);
         };
+        
+    }])
+    .service('userService', ['$http','tokenService', function($http, tokenService) {
+        var us = this;
+
+        us.getEmail = function(){
+            return $http.get('/userinfo')
+                .then(function(response) {
+                    if (response.data.error) {
+                        console.log(response.data.error);
+                        throw new Error(response.data.error);
+                    }
+                    return response;
+                });
+        };
+    }])
+    .controller('indexController', ['userService', 'tokenService', '$scope',  function(userService, tokenService, $scope) {
+        var ic = this;
+
+        $scope.share = {
+            email: '',
+            username: '',
+            extra: 'nothing here'
+        };
+
+        ic.logout = function() {
+            console.log('loggout');
+            tokenService.removeToken();
+            $scope.share.email = '';
+
+        };
+
+        if (tokenService.getToken()) {
+            userService.getEmail()
+                .then(function(response) {
+                    console.log('user found');
+                    $scope.share.email = response.data.email;
+                    $scope.share.username = response.data.username;
+                }).
+                then(null, function(response) {
+
+                });
+        }
+
+        $scope.$on('setEmail', function(event, email, username) {
+            $scope.share.email = email;
+            $scope.share.username = username;
+        });
+        
+        // Contains user info
     }]);

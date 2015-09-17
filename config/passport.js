@@ -28,10 +28,11 @@ module.exports = function(passport) {
                         return done(err);
                     }
                     if (user) {
-                        console.log('- register user exists');
-                        // username exists
+                        console.log('- register email exists');
+                        // email exists
                         return done(null, false);
                     } else {
+                        // check for username
                         var newUser = new User();
                         newUser.email = email;
                         newUser.password = newUser.generateHash(password);

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
-<body>
+<body ng-controller='indexController as ic'>
     <nav class='navbar navbar-default'>
         <div class="container-fluid">
             <div class="navbar-header">
@@ -27,6 +27,11 @@
             </div>
         </div>
     </nav>
+    <div class='user-container' ng-show='share.email'>
+        <div class='alert alert-warning'>Email: {{ share.email }}</div>
+        <div class='alert alert-warning'>Username: {{ share.username }}</div>
+        <button class='btn btn-danger' ng-click='ic.logout()'>Logout</button>
+    </div>
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -55,6 +60,7 @@
   <script src="results/results.js"></script>
   <script src="register/register.js"></script>
   <script src="login/login.js"></script>
+  <script src="user/user.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>

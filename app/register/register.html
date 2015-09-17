@@ -8,6 +8,11 @@
                 <div class='help-block' ng-messages='registerForm.email.$error' ng-show='registerForm.email.$touched' role='alert'>
                     <p class='help-block' ng-message='required'>email is required</p>
                 </div>
+                <label>username</label>
+                <input type='text' class='form-control' name='username' ng-model='user.username' required />
+                <div class='help-block' ng-messages='registerForm.username.$error' ng-show='registerForm.username.$touched' role='alert'>
+                    <p class='help-block' ng-message='required'>username is required</p>
+                </div>
                 <label>password</label>
                 <input type='password' class='form-control' name='password' ng-model='user.password' required />
                 <div class='help-block' ng-messages='registerForm.password.$error' ng-show='registerForm.password.$touched' role='alert'>
@@ -24,6 +29,7 @@
             <button type='submit' class='btn btn-default' ng-click='rc.register(user)'>Register</button>
         </form>
         <div ng-show='rc.emailExists'>Email exists</div>
+        <div ng-show='rc.usernameExists'>Username exists</div>
         <div ng-show='rc.registerSuccess'>Registered</div>
 
 
