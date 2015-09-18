@@ -55,7 +55,9 @@ angular.module('pollApp', [
             return $http.get('/userinfo')
                 .then(function(response) {
                     if (response.data.error) {
-                        console.log(response.data.error);
+                        if (response.data.revoke) {
+                            tokenService.removeToken();
+                        }
                         throw new Error(response.data.error);
                     }
                     return response;

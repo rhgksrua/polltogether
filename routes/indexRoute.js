@@ -11,6 +11,7 @@ var router = express.Router();
 
 var userRegister = require('../config/userRegister');
 
+// jwt key
 var JWT_PASS = process.env.JWT_PASS || 'pass';
 
 /**
@@ -18,6 +19,7 @@ var JWT_PASS = process.env.JWT_PASS || 'pass';
  * URI /
  *
  * Mainpage
+ *
  * - create polls and submit
  *
  **/
@@ -25,17 +27,25 @@ router.get('/', function(req, res) {
     res.sendFile(__dirname + '/app/index.html');
 });
 
-router.post('/test', authenticate, function(req, res) {
-    var email = req.user.email;
-    console.log('test req user email', req.user.email);
-    res.json({email: email});
-});
-
+/**
+ * URI /userinfo
+ *
+ * Returns user info if token validates
+ *
+ * @return {undefined}
+ */
 router.get('/userinfo', expressjwt({secret: JWT_PASS}), authenticate, function(req, res) {
     console.log('user', req.user);
     res.json({email: req.user.email, username: req.user.username});
 });
 
+/**
+ * URI /login 
+ *
+ * Users are logged in using passport-local
+ *
+ * @return {undefined}
+ */
 router.post('/login', function(req, res, next) {
     console.log('--- log in');
     
@@ -59,7 +69,7 @@ router.post('/login', function(req, res, next) {
         var token = jwt.sign({
             email: user.email,
             username: user.username
-        }, 'pass');
+        }, JWT_PASS);
 
         var retJSON = {
             token: token,
@@ -72,40 +82,25 @@ router.post('/login', function(req, res, next) {
     })(req, res, next);
 });
 
+/**
+ *  URI /register - registers user
+ *
+ *  Uses userRegister instead of passport
+ *
+ * @return {undefined}
+ */
 router.post('/register', userRegister);
 
-// register api endpoint
-router.post('/registerx', function(req, res, next) {
-    passport.authenticate('local-register', function(err, user, info) {
-        if (err) {
-            res.json({error: 'db error'});
-            return next(err);
-        }
-
-        // email exists
-        if (!user) {
-            return res.send({exists: true});
-        }
-
-        // creating token
-        var token = jwt.sign({
-            email: user.email
-        }, JWT_PASS);
-
-        return res.json({token: token, email: user.email});
-
-    })(req, res, next);
-});
-
-router.post('/registernew', function(req, res) {
-    console.log(req.body);
-    res.json(req.body);
-
-});
-
+/**
+ * authenticate - error handling for express-jwt
+ *
+ * Handles error
+ *
+ * @return {undefined}
+ */
 function authenticate(err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-        res.json({error: 'authorization failed'});
+        res.json({error: 'authorization failed', revoke: true});
     }
 }
 

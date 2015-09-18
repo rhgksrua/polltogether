@@ -4,9 +4,6 @@
 
 var express = require('express');
 var router = express.Router();
-//var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
-//var mongoose = require('mongoose');
-//mongoose.connect(mongoURI);
 var jwt = require('express-jwt');
 var Poll = require('../models/Poll');
 var User = require('../models/User');
@@ -64,11 +61,9 @@ router.post('/submit', jwt({secret: JWT_PASS}), function(req, res) {
 });
 
 /**
- *
  * URI /poll/id
  *
  * Returns poll for users to vote
- *
  **/
 router.get('/:id', function(req, res) {
     var url = req.params.id;
@@ -85,11 +80,9 @@ router.get('/:id', function(req, res) {
 });
 
 /**
- *
  * URI /poll/vote/submit
  * 
  * Accept votes and update poll results 
- *
  **/
 router.post('/vote/submit', function(req, res) {
     var url = req.body.id;
@@ -122,11 +115,9 @@ router.post('/vote/submit', function(req, res) {
 });
 
 /**
- *
  * URI /poll/:id/results
  * 
  * Returns poll results
- *
  **/
 router.get('/:id/results', function(req, res) {
     var url = req.params.id;

@@ -4,6 +4,17 @@
 var jwt = require('jsonwebtoken');
 var User = require('../models/User');
 
+var JWT_PASS = process.env.JWT_PASS;
+
+/**
+ * registerUser
+ *
+ * registers user with email, username, and password
+ *
+ * @param req
+ * @param res
+ * @return {undefined}
+ */
 var registerUser = function(req, res) {
     console.log('- starting user reg');
     
@@ -34,6 +45,8 @@ var registerUser = function(req, res) {
                     // email exists return error
                     return res.json({exists: 'username'});
                 }
+
+                // Create and save new user
                 var newUser = new User();
                 newUser.email = userInput.email;
                 newUser.username = userInput.username;
@@ -45,7 +58,7 @@ var registerUser = function(req, res) {
                     var token = jwt.sign({
                         email: added.email,
                         username: added.username
-                    }, 'pass');
+                    }, JWT_PASS);
                     console.log('- registering thru custom');
                     return res.json({token: token, email: added.email, username: added.username});
                 });

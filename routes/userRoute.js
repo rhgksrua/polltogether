@@ -11,18 +11,8 @@ var jwt = require('express-jwt');
 var JWT_PASS = process.env.JWT_PASS || 'pass';
 
 /**
+ * URI user/polls
  *
- * URI /poll/submit
- *
- * Receives ajax request and stores polls to db.
- * - Validate submition
- * - Create unique url for each poll
- *
- **/
-
-/***************************************************************************/
-
-/**
  * Returns list of polls from a user
  * POST {username: username}
  *
@@ -38,7 +28,6 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
     } else {
         owner = false;
     }
-
         
     User.findOne({username: req.body.username}, function(err, user) {
         if (err) {
@@ -62,6 +51,13 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
     });
 });
 
+/**
+ * URI /user/removepoll
+ *
+ * Removes poll
+ *
+ * @return {undefined}
+ */
 router.post('/removepoll', jwt({secret: JWT_PASS}), authPass, function(req, res) {
     if (!req.user) {
         console.log('- not logged in');
@@ -96,15 +92,11 @@ router.post('/removepoll', jwt({secret: JWT_PASS}), authPass, function(req, res)
 /**
  * authenticate - replaces express-jwt default behavior on authenication fail
  *
- * @param err
- * @param req
- * @param res
- * @param next
  * @return {undefined}
  */
 function authenticate(err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-        res.json({error: 'authorization failed'});
+        res.json({error: 'authorization failed', revoke: 'true'});
     }
 }
 
@@ -113,10 +105,6 @@ function authenticate(err, req, res, next) {
  *
  * Authenticates users for user page.
  *
- * @param err
- * @param req
- * @param res
- * @param next
  * @return {undefined}
  */
 function authPass(err, req, res, next) {
