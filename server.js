@@ -10,6 +10,8 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
+var morgan = require('morgan');
+
 var app = express();
 
 require('./config/passport')(passport);
@@ -41,13 +43,14 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
-//app.use(expressJwt({secret: 'pass'}).unless({path: ['/', '/login', '/register']}));
             
 app.use(passport.session());
 app.use(flash());
 
-
 app.enable('trust proxy');
+
+// logging
+app.use(morgan('combined'));
 
 /******************************************************************************
 *
@@ -75,6 +78,7 @@ app.use('/user', userRoute);
 *******************************************************************************/
 
 var server = app.listen(port, function(err) {
+    console.log(process.env.NODE_ENV);
     console.log('listening on http://%s:%s', 'localhost', port);
 });
 

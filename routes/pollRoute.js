@@ -12,6 +12,8 @@ var Poll = require('../models/Poll');
 var User = require('../models/User');
 var shortid = require('shortid');
 
+var JWT_PASS = process.env.JWT_PASS || 'pass';
+
 /**
  *
  * URI /poll/submit
@@ -21,7 +23,7 @@ var shortid = require('shortid');
  * - Create unique url for each poll
  *
  **/
-router.post('/submit', jwt({secret: 'pass'}), function(req, res) {
+router.post('/submit', jwt({secret: JWT_PASS}), function(req, res) {
     var rawPoll = req.body;
     var token = req.headers.authorization.split(' ')[1];
     console.log('- token:', token);
@@ -31,7 +33,13 @@ router.post('/submit', jwt({secret: 'pass'}), function(req, res) {
 
     var poll;
 
-    // get user id
+    
+    /**
+     * 
+     * Need to check if generated url exists in the database.
+     * If it exists, it should fail or create another one.
+     * 
+     */
     User.findOne({'email': email}, function(err, user) {
         console.log('user: ', user);
         if (err) {
@@ -52,10 +60,7 @@ router.post('/submit', jwt({secret: 'pass'}), function(req, res) {
                 return res.json(data.url);
             }
         });
-
     });
-    console.log('end of submit');
-
 });
 
 /**
@@ -67,13 +72,15 @@ router.post('/submit', jwt({secret: 'pass'}), function(req, res) {
  **/
 router.get('/:id', function(req, res) {
     var url = req.params.id;
-    Poll.findOne({url: url}, function(err, poll) {
+    Poll.findOne({url: url, show: true}, function(err, poll) {
         if (err) {
             res.json('db error');
             return console.log(err);
         }
-        //console.log('findOne success');
-        res.json(poll); 
+        if (!poll) {
+            return res.json({error: 'poll does not exist'});
+        }
+        return res.json(poll); 
     });
 });
 

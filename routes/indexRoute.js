@@ -11,6 +11,7 @@ var router = express.Router();
 
 var userRegister = require('../config/userRegister');
 
+var JWT_PASS = process.env.JWT_PASS || 'pass';
 
 /**
  *
@@ -30,7 +31,7 @@ router.post('/test', authenticate, function(req, res) {
     res.json({email: email});
 });
 
-router.get('/userinfo', expressjwt({secret: 'pass'}), authenticate, function(req, res) {
+router.get('/userinfo', expressjwt({secret: JWT_PASS}), authenticate, function(req, res) {
     console.log('user', req.user);
     res.json({email: req.user.email, username: req.user.username});
 });
@@ -89,7 +90,7 @@ router.post('/registerx', function(req, res, next) {
         // creating token
         var token = jwt.sign({
             email: user.email
-        }, 'pass');
+        }, JWT_PASS);
 
         return res.json({token: token, email: user.email});
 

@@ -73,6 +73,9 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         voteService.getPoll().then(function(response) {
             console.log('ajax success');
             console.log(response);
+            if (response.data.error) {
+                throw new Error(response.data.error);
+            }
             vc.poll = response.data;
             vc.getError = false;
         }).then(null, function(response) {

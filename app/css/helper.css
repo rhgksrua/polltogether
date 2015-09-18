@@ -5,3 +5,18 @@
     height: 12px;
     border-radius: 3px;
 }
+
+.logout.ng-hide {
+    transition: all 1s;
+    opacity: 0;
+
+}
+
+.logout {
+    transition: all 0s;
+    opacity: 1;
+}
+
+#logout {
+    color: #ff4040;
+}

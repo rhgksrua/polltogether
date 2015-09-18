@@ -22,24 +22,17 @@
             <div class="navbar-header">
                 <a href="#/create" class='navbar-brand'>POLLTOGETHER</a>
             </div>
-            <div class='collapse navbar-collapse'>
-                <p class='navbar-text navbar-right'><b>polltogether</b> by <em>pkn</em> and <em>hankhank</em></p>
-                <p class='navbar-text navbar-right'><a href='/#/login'>Log In</a></p>
-                <p class='navbar-text navbar-right'><a href='/#/register'>Register</a></p>
-            </div>
-        </div>
-        <div class='navbar navbar-default' ng-show='share.email'>
             <div class='container-fluid'>
                 <ul class='nav navbar-nav navbar-right' >
-                    <li role='presentation'><a href='/#/user/{{ share.username }}'>{{ share.username }}</a></li>
-                    <li><button class='btn btn-danger navbar-btn' ng-click='ic.logout()'>Logout</button></li>
+                    <li class='logout' ng-show='ic.loggedOut'><p id='logout' class='navbar-text'>Logged Out</p></li>
+                    <li ng-hide='share.username'><a href='/#/login'>Log In</a></li>
+                    <li ng-hide='share.username'><a href='/#/register'>Register</a></li>
+                    <li ng-show='share.username' role='presentation'><a href='/#/user/{{ share.username }}'>{{ share.username }}</a></li>
+                    <li ng-show='share.username'><button class='btn btn-danger navbar-btn' ng-click='ic.logout()'>Logout</button></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class='alert alert-warning' ng-show='ic.loggedOut'>
-        Logged Out
-    </div>
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>

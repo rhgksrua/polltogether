@@ -13,8 +13,9 @@
         .service('pollService', ['$http', '$window', function($http, $window) {
             var poll = this;
             var validate = function(Poll) {
+                console.log(Poll.choices);
                 Poll.choices = Poll.choices.filter(function(el) {
-                    console.log('el');
+                    console.log('el', el);
                     return el.name.length > 0;
                 });
                 return Poll;

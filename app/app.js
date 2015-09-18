@@ -74,11 +74,13 @@ angular.module('pollApp', [
         ic.logout = function() {
             tokenService.removeToken();
             $scope.share.email = '';
+            $scope.share.username = '';
             ic.loggedOut = true;
             $timeout(function() {
                 ic.loggedOut = false;
 
             }, 3000);
+            $location.path('/');
 
         };
 

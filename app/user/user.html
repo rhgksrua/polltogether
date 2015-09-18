@@ -2,8 +2,7 @@
     <p ng-show='uc.user'>{{ uc.user }}'s Polls</p>
     <ul class='list-group'>
         <li class='list-group-item' ng-repeat='poll in uc.pollList'>
-            <button class='btn btn-danger'>REMOVE</button>
-
+            <button class='btn btn-danger' ng-click='uc.removePoll(poll.url, $index)' ng-show='uc.owner'>REMOVE</button>
             <a class='btn btn-primary' href='/#/vote/{{poll.url}}'>Link: {{poll.url}}</a>
             <a class='btn btn-info' href='/#/vote/{{poll.url}}/results'>Result</a>
         </li>
