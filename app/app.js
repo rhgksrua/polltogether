@@ -46,6 +46,8 @@ angular.module('pollApp', [
         ts.getToken = function() {
             return store.getItem(key);
         };
+        ts.flashMessage = function(msg) {
+        };
         
     }])
     .service('userService', ['$http','tokenService', function($http, tokenService) {
@@ -78,10 +80,14 @@ angular.module('pollApp', [
             $scope.share.email = '';
             $scope.share.username = '';
             ic.loggedOut = true;
+
+            $scope.$emit('showMessage', 'logged out');
+            /*
             $timeout(function() {
                 ic.loggedOut = false;
 
             }, 3000);
+            */
             $location.path('/');
 
         };
@@ -89,8 +95,6 @@ angular.module('pollApp', [
         if (tokenService.getToken()) {
             userService.getEmail()
                 .then(function(response) {
-                    console.log('user found');
-                    console.log(response.data);
                     $scope.share.email = response.data.email;
                     $scope.share.username = response.data.username;
                 }).
@@ -102,6 +106,19 @@ angular.module('pollApp', [
         $scope.$on('setEmail', function(event, email, username) {
             $scope.share.email = email;
             $scope.share.username = username;
+        });
+
+        $scope.$on('showMessage', function(event, message) {
+            if (!message) {
+                console.log('showMessage needs message');
+                return;
+            }
+            $scope.message = message || '';
+            ic.showMessage = true;
+            $timeout(function() {
+                ic.showMessage = false;
+                ic.message = '';
+            }, 3000);
         });
         
         // Contains user info

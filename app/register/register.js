@@ -81,6 +81,7 @@
                             tokenService.setToken(response.data.token);
                             //$scope.share.email = response.data.email;
                             $scope.$emit('setEmail', response.data.email, response.data.username);
+                            $scope.$emit('showMessage', 'registered!');
                             rc.registerSuccess = true;
 
                             $location.path('/');

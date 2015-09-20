@@ -46,7 +46,7 @@
                         }
                         lc.loginError = false;
                         tokenService.setToken(response.data.token);
-                        console.log('------------ user', response.data);
+                        $scope.$emit('showMessage', 'logged in');
                         $scope.$emit('setEmail', response.data.email, response.data.username);
                         $location.path('/create');
                     })
