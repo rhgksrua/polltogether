@@ -58,14 +58,6 @@ app.use(morgan('combined'));
 *
 *******************************************************************************/
 
-app.use(function(err, req, res, next) {
-    console.log('token error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    console.log(req.user);
-    if (err.name === 'UnauthorizedError') {
-        res.status(401).send('invalid token...');
-    }
-});
-
 app.use('/', indexRoute);
 app.use('/poll', pollRoute);
 app.use('/user', userRoute);

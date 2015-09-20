@@ -88,7 +88,7 @@
                         pc.status = 'Your poll has been submitted';
                     })
                     .then(null, function(response) {
-                        console.log('error', response);
+                        console.log('error', response.data);
                         pc.serverError = true;
                     });
 

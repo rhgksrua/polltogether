@@ -12,6 +12,22 @@ var shortid = require('shortid');
 var JWT_PASS = process.env.JWT_PASS || 'pass';
 
 /**
+ * jwtErrHandler - error handling for express-jwt
+ *
+ * @param err
+ * @param req
+ * @param res
+ * @param next
+ * @return {undefined}
+ */
+function jwtErrHandler(err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.json({error: 'Unauthorized'});
+    }
+}
+
+
+/**
  *
  * URI /poll/submit
  *
@@ -20,16 +36,19 @@ var JWT_PASS = process.env.JWT_PASS || 'pass';
  * - Create unique url for each poll
  *
  **/
-router.post('/submit', jwt({secret: JWT_PASS}), function(req, res) {
+router.post('/submit', jwt({secret: JWT_PASS, credentialsRequired: false}), jwtErrHandler, function(req, res) {
+//router.post('/submit', jwt({secret: JWT_PASS, credentialsRequired: true}), function(req, res) {
     var rawPoll = req.body;
-    var token = req.headers.authorization.split(' ')[1];
-    console.log('- token:', token);
-    console.log(req.user.email);
-    var email = req.user.email;
+    var email;
+    try {
+        email = req.user.email;
+    } catch (e) {
+        console.log(e);
+    }
+        
     rawPoll.url = shortid.generate();
 
     var poll;
-
     
     /**
      * 
@@ -45,6 +64,7 @@ router.post('/submit', jwt({secret: JWT_PASS}), function(req, res) {
         }
         if (user) {
             // user exists add id to poll
+            console.log('user found!!!!');
             rawPoll.user_id = user._id;
         }
         poll = new Poll(rawPoll);
@@ -69,8 +89,8 @@ router.get('/:id', function(req, res) {
     var url = req.params.id;
     Poll.findOne({url: url, show: true}, function(err, poll) {
         if (err) {
-            res.json('db error');
-            return console.log(err);
+            console.log(err);
+            return res.json('db error');
         }
         if (!poll) {
             return res.json({error: 'poll does not exist'});
