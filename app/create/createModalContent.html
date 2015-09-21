@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{ items.status }}</h3>
+</div>
+<div ng-hide='items.serverError'>
+    <div class='modal-body'>
+        <a ng-click='ok()' ng-href="{{items.voteUrl}}">{{items.host}}{{items.voteUrl}}</a>
+    </div>
+</div>
+<div ng-show='items.serverError' class='alert alert-danger'>
+    <div class='modal-body'>
+        Something went wrong
+    </div>
+</div>
+<div class='modal-footer'>
+    <button class='btn btn-primary' type='button' ng-click='ok()'>OK</button>
+</div>

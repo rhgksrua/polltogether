@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('pollApp.pollCreate', ['ngRoute','ngAnimate','ngMessages'])
+    angular.module('pollApp.pollCreate', ['ngRoute', 'ngAnimate', 'ngMessages', 'ui.bootstrap'])
 
         .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/create', {
@@ -40,39 +40,12 @@
 
             };
         }])
-        .controller('pollCtrl', ["$location", "pollService", '$window', '$scope', function($location, pollService, $window, $scope){
+        .controller('pollCtrl', ["$location", "pollService", '$window', '$scope', '$modal', function($location, pollService, $window, $scope, $modal) {
             var pc = this;
             pc.host = $location.host();
             pc.data = {choices: []};
             pc.data.choices.push({'id': 'choice0' , "vote": 0});
             pc.email = '';
-           
-
-
-
-            /*
-            // check for jwt to get email address
-            pc.checkJwt = function() {
-                var token = $window.localStorage['auth-token'];
-                if (token) {
-                    console.log('jwt found');
-                    return token;
-                }
-                console.log('jwt not found');
-                return false;
-            };
-            var jwt = pc.checkJwt();
-            if (jwt) {
-                pollService.getEmail(jwt)
-                    .then(function(response) {
-                        pc.email = response;
-                    }).then(null, function(response) {
-                        console.log('error', response);
-                        pc.serverError = true;
-                        
-                    });
-            }
-            */
 
             pc.submitNewPoll = function(){
                 pollService.createPoll(pc.data)
@@ -86,10 +59,12 @@
                         }
                         pc.serverError = false;
                         pc.status = 'Your poll has been submitted';
+                        pc.open();
                     })
                     .then(null, function(response) {
                         console.log('error', response.data);
                         pc.serverError = true;
+                        pc.open();
                     });
 
 
@@ -105,6 +80,44 @@
                 console.log('reset form');
                 pc.data = {choices: [{'id': 'choice0' , "vote": 0}]};
             };
+
+            pc.open = function(size) {
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'create/createModalContent.html',
+                    controller: 'modalInstanceCtrl',
+                    constollerAs: 'mi',
+                    size: size,
+                    resolve: {
+                        items: function() {
+                            return {
+                                serverError: pc.serverError,
+                                status: pc.status,
+                                voteUrl: pc.voteUrl,
+                                host: pc.host
+                            };
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(selectedItem) {
+                    console.log('selectedItem: ', selectedItem);
+                });
+            };
+    }])
+    .controller('modalInstanceCtrl', ['$scope', '$modalInstance', 'items', function($scope, $modalInstance, items) {
+        console.log('items from pc: ', items);
+        $scope.items = items;
+        
+        $scope.ok = function() {
+            console.log('trying to close');
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
+
     }]);
 })();
 

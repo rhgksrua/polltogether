@@ -31,12 +31,16 @@
                 <!--{{ans.name}}{{pc.data.choices}}-->
             </div>
             <button type="button" ng-click="pc.addChoice()" class="btn btn-default" ng-hide="pc.ob.submitted">Add Choice</button>
+            <!--
             <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-disabled="userForm.$invalid " ng-hide="pc.ob.submitted" >Submit</button>
+            -->
+            <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid " ng-hide="pc.ob.submitted" >Submit</button>
             <button type='button' ng-click='pc.resetForm()' class='btn btn-danger'>Reset</button> 
 
 
         </form>
     </div>
+    <button type='button' class='btn btn-default' ng-click='pc.open()'>OPEN ME</button>
 </div>
 
 
@@ -61,7 +65,9 @@
                 </div>
             </div>
             <div ng-show='pc.serverError' class='alert alert-danger'>
-                Something went wrong
+                <div class='modal-body'>
+                    Something went wrong
+                </div>
             </div>
         </div>
 

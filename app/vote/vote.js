@@ -51,7 +51,7 @@ angular.module('pollApp.pollVote', ['ngRoute'])
                 });
         };
     }])
-    .controller('pollVoteCtrl', ['voteService', '$routeParams' ,"$location", function(voteService, $routeParams,$location) {
+    .controller('pollVoteCtrl', ['voteService', '$routeParams', "$location", '$modal', function(voteService, $routeParams, $location, $modal) {
         var vc = this;
 
         // holds user choice
@@ -106,25 +106,27 @@ angular.module('pollApp.pollVote', ['ngRoute'])
             if (vc.choice === undefined) {
                 vc.failed = true;
                 vc.status = 'Need to pick one';
+                vc.open();
             } else if (vc.choice !== undefined) {
-                vc.status = 'Submitting...';
                 voteService.submitVote({id: vc.id, choice: vc.choice})
                     .then(function(response) {
                         console.log(response.data.error);
                         if (response.data.error) {
                             vc.status = response.data.error;
-                            vc.failed = true;
-                            vc.submitted = false;
-                            return;
+                            throw new Error(response.data.error);
                         }
                         // success
                         vc.status = 'Vote submitted!';
                         vc.failed = false;
                         vc.submitted = true;
+                        vc.open();
                     }).then(null, function(response) {
                         // failed
-                        vc.status = 'Vote submission failed';
+                        if (!vc.status) {
+                            vc.status = 'Vote submission failed';
+                        }
                         vc.failed = true;
+                        vc.open();
                     });
             }
         };
@@ -139,5 +141,28 @@ angular.module('pollApp.pollVote', ['ngRoute'])
         vc.resultsPage = function(){
             var page = "/vote/" + vc.id + "/results";
             $location.path(page);
+        };
+
+        vc.open = function(size) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'vote/voteModalContent.html',
+                controller: 'modalInstanceCtrl',
+                constollerAs: 'mi',
+                size: size,
+                resolve: {
+                    items: function() {
+                        return {
+                            failed: vc.failed,
+                            status: vc.status,
+                            id: vc.id
+                        };
+                    }
+                }
+            });
+
+            modalInstance.result.then(function(selectedItem) {
+                console.log('selectedItem: ', selectedItem);
+            });
         };
     }]);

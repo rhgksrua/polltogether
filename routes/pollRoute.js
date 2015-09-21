@@ -26,7 +26,6 @@ function jwtErrHandler(err, req, res, next) {
     }
 }
 
-
 /**
  *
  * URI /poll/submit
