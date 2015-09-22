@@ -28,6 +28,7 @@
                     <li class='logout' ng-show='ic.loggedOut'><p id='logout' class='navbar-text'>Logged Out {{message}}</p></li>
                     -->
                     <li class='logout' ng-show='ic.showMessage'><p id='logout' class='navbar-text'>{{message}}</p></li>
+                    <li ng-hide='share.username'><a href='/twitter'>Twitter</a></li>
                     <li ng-hide='share.username'><a href='/#/login'>Log In</a></li>
                     <li ng-hide='share.username'><a href='/#/register'>Register</a></li>
                     <li ng-show='share.username' role='presentation'><a href='/#/user/{{ share.username }}'>{{ share.username }}</a></li>

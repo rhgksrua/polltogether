@@ -14,6 +14,37 @@ var userRegister = require('../config/userRegister');
 // jwt key
 var JWT_PASS = process.env.JWT_PASS || 'pass';
 
+router.get('/twitter/fail', function(req, res) {
+    res.send('login failed');
+});
+
+router.get('/twitter/success', function(req, res) {
+    var token = jwt.sign({
+        username: req.user.twitter.username
+    }, JWT_PASS);
+
+    var retJSON = {
+        token: token,
+        username: req.user.twitter.username
+    };
+
+    console.log('user inside succ:', req.user);
+
+    return res.json(retJSON);
+
+});
+
+router.get('/test', function(req, res) {
+    res.send(process.env.CONSUMER_KEY);
+});
+
+router.get('/twitter', passport.authenticate('twitter'));
+
+router.get('/twitter/return', 
+    passport.authenticate('twitter', {successRedirect: '/twitter/success', failureRedirect: '/twitter/fail'})
+);
+
+
 /**
  *
  * URI /

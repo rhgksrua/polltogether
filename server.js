@@ -15,6 +15,7 @@ var morgan = require('morgan');
 var app = express();
 
 require('./config/passport')(passport);
+require('./config/passportTwitter')(passport);
 
 
 // DB setup
@@ -30,7 +31,7 @@ var userRoute = require('./routes/userRoute');
 // Separate production and local.
 // var environment = process.env.POLLENV || 'local';
 
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 3000;
 
 // Serves static files
 app.use(express.static('app'));
@@ -45,7 +46,7 @@ app.use(session({
 app.use(passport.initialize());
             
 app.use(passport.session());
-app.use(flash());
+//app.use(flash());
 
 app.enable('trust proxy');
 
@@ -74,5 +75,6 @@ var server = app.listen(port, function(err) {
     console.log(process.env.NODE_ENV);
     console.log(process.env.TESTVAR);
     console.log('listening on http://%s:%s', 'localhost', port);
+    console.log('listening on http://127.0.0.1:%s', port);
 });
 

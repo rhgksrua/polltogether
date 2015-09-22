@@ -7,11 +7,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-    email: {type: String, required: true},
-    username: {type: String, required: true},
-    password: {type: String, required: true},
+    email: {type: String},
+    username: {type: String},
+    password: {type: String},
     created: {type: Date, default: Date.now},
-    updated: {type: Date, default: Date.now}
+    updated: {type: Date, default: Date.now},
+    twitter: {
+        id: String,
+        token: String,
+        displayName: String,
+        username: String
+    }
 });
 
 UserSchema.methods.generateHash = function(password) {

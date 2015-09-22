@@ -7,6 +7,7 @@ var User = require('../models/User');
 
 module.exports = function(passport) {
 
+    /*
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
@@ -15,8 +16,15 @@ module.exports = function(passport) {
         User.findById(id, function(err, user) {
             done(err, user);
         });
+        done(null, id);
     });
+    */
 
+    /**
+     * Deprecated!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+     *
+     * @return {undefined}
+     */
     passport.use('local-register', new LocalStrategy({
             usernameField: 'email',
             passwordField: 'password',
