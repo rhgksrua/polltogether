@@ -16,7 +16,7 @@
                 console.log(Poll.choices);
                 Poll.choices = Poll.choices.filter(function(el) {
                     console.log('el', el);
-                    return el.name.length > 0;
+                    return el.name && el.name.length > 0;
                 });
                 return Poll;
             };
@@ -48,6 +48,7 @@
             pc.email = '';
 
             pc.submitNewPoll = function(){
+                console.log('submitting');
                 pollService.createPoll(pc.data)
                     .then(function(response) {
                         pc.voteUrl = '/#/vote/' + response.data;
@@ -79,6 +80,11 @@
             pc.resetForm = function() {
                 console.log('reset form');
                 pc.data = {choices: [{'id': 'choice0' , "vote": 0}]};
+            };
+
+            pc.removeChoice = function(index) {
+                console.log('removing choice');
+                pc.data.choices.splice(index, 1);
             };
 
             pc.open = function(size) {

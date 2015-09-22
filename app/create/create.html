@@ -1,7 +1,10 @@
 <div class="container-fluid">
     <h1 class="text-primary">Create your poll</h1>
     <div class="well">
+        <!--
         <form name="userForm" novalidate data-ng-submit="pc.submitNewPoll()">
+        -->
+        <form name="userForm" data-ng-submit="pc.submitNewPoll()" novalidate >
             <div>
 
             </div>
@@ -20,27 +23,22 @@
                 <div class='input-group'>
                     <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="1">
                     <span class="input-group-btn">
-                        <button class='btn btn-warning' ng-show='$index === 0'>Required</button>
-                        <button class='btn btn-warning' ng-hide='$index === 0'>Remove</button>
+                        <button type='button' class='btn btn-warning' ng-show='$index === 0'>Required</button>
+                        <button type='button' class='btn btn-warning' ng-hide='$index === 0' ng-click='pc.removeChoice($index)'>Remove</button>
                     </span>
                 </div>
                 <div class="help-block" ng-messages="userForm['choice'+$index].$error" ng-show="userForm['choice'+$index].$dirty">
                     <p class="help-block" ng-message="required">choice is required</p>
                     <p class="help-block" ng-message="minlength">choice must be more than 1 chars</p>
                 </div>
-                <!--{{ans.name}}{{pc.data.choices}}-->
             </div>
             <button type="button" ng-click="pc.addChoice()" class="btn btn-default" ng-hide="pc.ob.submitted">Add Choice</button>
-            <!--
-            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-disabled="userForm.$invalid " ng-hide="pc.ob.submitted" >Submit</button>
-            -->
             <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid " ng-hide="pc.ob.submitted" >Submit</button>
             <button type='button' ng-click='pc.resetForm()' class='btn btn-danger'>Reset</button> 
 
 
         </form>
     </div>
-    <button type='button' class='btn btn-default' ng-click='pc.open()'>OPEN ME</button>
 </div>
 
 
