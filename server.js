@@ -35,6 +35,9 @@ var port = process.env.PORT || 3000;
 // Serves static files
 app.use(express.static('app'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 app.use(session({
     secret: 'abcdefg',

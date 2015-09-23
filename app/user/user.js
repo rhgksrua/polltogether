@@ -40,6 +40,7 @@
                         throw new Error(response.data.error);
                     }
                     if (response.data.polls.length > 0) {
+                        console.log(response.data);
                         uc.owner = response.data.owner;
                         uc.pollList = response.data.polls;
                     }

@@ -13,7 +13,8 @@ module.exports = function(passport) {
 
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
-            console.log('deser user:', user);
+            console.log('id: ', id);
+          //  console.log('deser user:', user);
             if (err) {
                 done(err);
             }
@@ -28,8 +29,6 @@ module.exports = function(passport) {
         }, function (token, tokenSecret, profile, done) {
             console.log('- token:', token);
             console.log('- tokenSecret:', tokenSecret);
-            //console.log(profile);
-            //return done(null, profile);
             process.nextTick(function() {
                 User.findOne({'twitter.id': profile.id}, function(err, user) {
                     if (err) {
@@ -40,19 +39,32 @@ module.exports = function(passport) {
                         // user exists return user from db
                         return done(null, user);
                     } else {
-                        // create new user entry
-                        var newUser = new User();
-                        newUser.twitter.id = profile.id;
-                        newUser.twitter.token = token;
-                        newUser.twitter.displayName = profile.displayName;
-                        console.log('- profile username:', profile.username);
-                        newUser.twitter.username = profile.username;
-                        newUser.save(function(err, added) {
+                        User.findOne({'username': profile.username}, function(err, user) {
+                            // new twitter user but same id as normal user
                             if (err) {
-                                throw err;
+                                return done(err);
                             }
-                            console.log('- added:', added);
-                            return done(null, added);
+                            var newUser = new User();
+
+                            // Only set username if username does not conflict with normal user
+                            if (user) {
+                                newUser.usernameEmpty = true;
+                            } else {
+                                newUser.username = profile.username;
+                            }
+
+                            newUser.twitter.id = profile.id;
+                            newUser.twitter.token = token;
+                            newUser.twitter.displayname = profile.displayName;
+                            console.log('- profile username:', profile.username);
+                            newUser.twitter.username = profile.username;
+                            newUser.save(function(err, added) {
+                                if (err) {
+                                    throw err;
+                                }
+                                console.log('- added:', added);
+                                return done(null, added);
+                            });
                         });
                     }
                 });

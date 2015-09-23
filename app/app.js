@@ -53,6 +53,27 @@ angular.module('pollApp', [
     .service('userService', ['$http','tokenService', function($http, tokenService) {
         var us = this;
 
+        /**
+         * logOut - logs out user
+         * 
+         * tells server to destroy session
+         *
+         * @return {undefined}
+         */
+        us.logOut = function() {
+            return $http.post('/logout')
+                .then(function(response) {
+                    return response;
+                });
+        };
+
+        /**
+         * getEmail - get user info
+         *
+         * gets username and email from server based on jwt token
+         *
+         * @return {undefined}
+         */
         us.getEmail = function(){
             return $http.get('/userinfo')
                 .then(function(response) {
@@ -77,17 +98,21 @@ angular.module('pollApp', [
 
         ic.logout = function() {
             tokenService.removeToken();
+            userService.logOut()
+                .then(function(response) {
+                    if (response.data.error) {
+                        throw new Error(response.data.error);
+                    }
+                    console.log(response.data);
+                    return response;
+                })
+                .then(null, function(response) {
+                    console.log(response.data);
+                });
             $scope.share.email = '';
             $scope.share.username = '';
             ic.loggedOut = true;
-
             $scope.$emit('showMessage', 'logged out');
-            /*
-            $timeout(function() {
-                ic.loggedOut = false;
-
-            }, 3000);
-            */
             $location.path('/');
 
         };

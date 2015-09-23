@@ -15,35 +15,91 @@ var userRegister = require('../config/userRegister');
 var JWT_PASS = process.env.JWT_PASS || 'pass';
 
 router.get('/twitter/fail', function(req, res) {
+    console.log(req.user);
     res.send('login failed');
 });
 
-router.get('/twitter/test', function(req, res) {
+router.get('/test', function(req, res) {
     console.log('test');
-    res.send(req.session.username);
+    console.log(req.user);
+    res.send('username: ' + req.session.username);
+});
+
+router.post('/twitter/username', function(req, res) {
+    // check db for username
+    // if username exists, user has to pick another username
+    // else save username
+    console.log('----------- in twitter username ------');
+    console.log('req body username: ', req.body.username);
+    console.log('req.session.id', req.session.twitterId);
+    User.findOne({'username': req.body.username}, function(err, user) {
+        if (err) {
+            return res.send('error');
+        }
+        if (user) {
+            return res.render('./twitter/username', {message: 'username exists'});
+        }
+        User.findOne({'twitter.id': req.session.twitterId}, function(err, user) {
+            if (err) {
+                return res.send('error');
+            }
+            if (!user) {
+                return res.send('user does not exists. log in through twitter again');
+            }
+            user.username = req.body.username;
+            user.save(function(err, updatedUser) {
+                if (err) {
+                    return res.send('update error');
+                }
+                var token = jwt.sign({
+                    username: updatedUser.username
+                }, JWT_PASS);
+                console.log('updated twitter username conflict');
+                return res.render('./twitter/success', {username: updatedUser.username, token: token});
+            });
+        });
+    });
 });
 
 router.get('/twitter/success', function(req, res) {
+    // NOTE: need to intercept logins with username conflict
+    //
     console.log('---------------------------------');
 
+    console.log('- user:');
+    console.log(req.user);
+
     if (!req.user) {
-        req.user = {twitter: {username: 'none'}};
+        return res.send('error');
+        //req.user = {twitter: {username: 'not signed in'}};
+    }
+
+    console.log('req.user: ', req.user);
+    req.session.twitterId = req.user.twitter.id;
+
+    // need to check for duplicate id
+    if (!req.user.username) {
+        return res.render('./twitter/username');
     }
 
     req.session.username = req.user.twitter.username;
+    
     var token = jwt.sign({
-        username: req.user.twitter.username || 'none'
+        username: req.user.username || 'none'
     }, JWT_PASS);
 
+    /*
     var retJSON = {
         token: token,
         username: req.user.twitter.username || 'none'
     };
+    */
+
+    
 
     console.log('user inside succ:', req.session);
 
-    //return res.render('./twitter/success', {username: 'alshdf'});
-    return res.render('./twitter/success', {username: req.user.twitter.username});
+    return res.render('./twitter/success', {username: req.user.username, token: token});
 });
 
 router.get('/twitter', passport.authenticate('twitter'));
@@ -130,6 +186,20 @@ router.post('/login', function(req, res, next) {
  * @return {undefined}
  */
 router.post('/register', userRegister);
+
+router.post('/logout', function(req, res) {
+    console.log(req.session);
+    // req.logout();
+    
+    req.session.destroy(function(err) {
+        if (err) {
+            return res.json({error: 'session error'});
+        }
+        return res.json({loggedout: true});
+    });
+   
+
+});
 
 /**
  * authenticate - error handling for express-jwt

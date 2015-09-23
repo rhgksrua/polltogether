@@ -9,13 +9,14 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
     email: {type: String},
     username: {type: String},
+    usernameEmpty: {type: Boolean, default: false},
     password: {type: String},
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now},
     twitter: {
         id: String,
         token: String,
-        displayName: String,
+        displayname: String,
         username: String
     }
 });

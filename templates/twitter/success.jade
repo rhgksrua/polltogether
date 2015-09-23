@@ -1,8 +1,20 @@
 extends ../twitterLayout.jade
 
+block resources
+    script(src='https://code.jquery.com/jquery-1.11.3.min.js')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+
 block title
     title Twitter Login Success
 
+
 block content
-    h1 Twitter Login Success
-    .greeting Welcome, #{username}
+    .container-fluid
+        .token(data-token='#{token}')
+        .page-header
+            h1 Twitter Login Success
+        .greeting.text-default Welcome, #{username}
+        a(href='/') Continue
+        script(src='/resources/js/twitterSuccess.js')
+

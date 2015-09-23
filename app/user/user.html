@@ -1,10 +1,15 @@
 <div class="container-fluid">
-    <p ng-show='uc.user'>{{ uc.user }}'s Polls</p>
+    <div class='container-fluid'>
+        <p class='pull-left' ng-show='uc.user'>{{ uc.user }}'s Polls</p>
+        <p class='pull-right' ng-show='uc.owner'><a href='/#/'>Change password</a></p>
+    </div>
     <ul class='list-group'>
         <li class='list-group-item' ng-repeat='poll in uc.pollList'>
-            <button class='btn btn-danger' ng-click='uc.removePoll(poll.url, $index)' ng-show='uc.owner'>REMOVE</button>
-            <a class='btn btn-primary' href='/#/vote/{{poll.url}}'>Link: {{poll.url}}</a>
-            <a class='btn btn-info' href='/#/vote/{{poll.url}}/results'>Result</a>
+            <div class="row">
+                <p class='col-xs-3'><a class='btn btn-primary' href='/#/vote/{{poll.url}}'>Link: {{poll.url}}</a></p>
+                <p class='col-xs-2'><a class='btn btn-info' href='/#/vote/{{poll.url}}/results'>Result</a></p>
+                <p class='col-xs-2 col-xs-offset-4'><button class='btn btn-danger' ng-click='uc.removePoll(poll.url, $index)' ng-show='uc.owner'>REMOVE</button></p>
+            </div>
         </li>
     </ul>
     <p class='alert alert-danger' ng-hide='uc.pollList'>Nothing found</p>

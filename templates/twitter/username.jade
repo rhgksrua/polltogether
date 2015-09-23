@@ -1,0 +1,26 @@
+extends ../twitterLayout.jade
+
+block resources
+    script(src='https://code.jquery.com/jquery-1.11.3.min.js')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+
+block title
+    title Set Username
+
+
+block content
+    .container-fluid
+        .token(data-token='#{token}')
+        .page-header
+            h1 Need to set a username
+        form(method='POST' action='/twitter/username')
+            .form-group
+                label(for='username') username
+                input(type='text', name='username')#username.form-control
+            input(type='submit').btn.btn-default
+    .container-fluid
+        .error.alert.alert-danger #{message}
+    script(src='/resources/js/twitterUsername.js')
+
+

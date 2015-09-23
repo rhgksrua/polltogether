@@ -69,7 +69,11 @@
                         if (response.data.error) {
                             throw new Error('SERVER ERROR');
                         } else if (response.data.exists) {
-                            rc.emailExists = true;
+                            if (response.data.exists === 'email') {
+                                rc.emailExists = true;
+                            } else if (response.data.exists === 'username') {
+                                rc.usernameExists = true;
+                            }
                             throw new Error('email exists');
                         }
 
