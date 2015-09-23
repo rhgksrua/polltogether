@@ -18,24 +18,32 @@ router.get('/twitter/fail', function(req, res) {
     res.send('login failed');
 });
 
+router.get('/twitter/test', function(req, res) {
+    console.log('test');
+    res.send(req.session.username);
+});
+
 router.get('/twitter/success', function(req, res) {
+    console.log('---------------------------------');
+
+    if (!req.user) {
+        req.user = {twitter: {username: 'none'}};
+    }
+
+    req.session.username = req.user.twitter.username;
     var token = jwt.sign({
-        username: req.user.twitter.username
+        username: req.user.twitter.username || 'none'
     }, JWT_PASS);
 
     var retJSON = {
         token: token,
-        username: req.user.twitter.username
+        username: req.user.twitter.username || 'none'
     };
 
-    console.log('user inside succ:', req.user);
+    console.log('user inside succ:', req.session);
 
-    return res.json(retJSON);
-
-});
-
-router.get('/test', function(req, res) {
-    res.send(process.env.CONSUMER_KEY);
+    //return res.render('./twitter/success', {username: 'alshdf'});
+    return res.render('./twitter/success', {username: req.user.twitter.username});
 });
 
 router.get('/twitter', passport.authenticate('twitter'));
@@ -55,7 +63,8 @@ router.get('/twitter/return',
  *
  **/
 router.get('/', function(req, res) {
-    res.sendFile(__dirname + '/app/index.html');
+    res.render('./app/index');
+    //res.sendFile(__dirname + '/app/index.html');
 });
 
 /**

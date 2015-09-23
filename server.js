@@ -17,7 +17,6 @@ var app = express();
 require('./config/passport')(passport);
 require('./config/passportTwitter')(passport);
 
-
 // DB setup
 var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polls';
 var mongoose = require('mongoose');
@@ -52,6 +51,10 @@ app.enable('trust proxy');
 
 // logging
 app.use(morgan('combined'));
+
+// templating
+app.set('views', './templates');
+app.set('view engine', 'jade');
 
 /******************************************************************************
 *
