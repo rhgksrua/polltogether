@@ -12,6 +12,8 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var morgan = require('morgan');
 
+require('dotenv').load();
+
 var app = express();
 
 require('./config/passport')(passport);

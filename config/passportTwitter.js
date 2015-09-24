@@ -2,12 +2,16 @@
 'use strict';
 
 var TwitterStrategy = require('passport-twitter').Strategy;
-
 var User = require('../models/User');
 
 module.exports = function(passport) {
     var callbackUrl;
+    var twitterStrategyOptions;
 
+    /**
+     * Session is required by passport-twitter
+     *
+     */
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
@@ -15,7 +19,6 @@ module.exports = function(passport) {
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
             console.log('id: ', id);
-          //  console.log('deser user:', user);
             if (err) {
                 done(err);
             }
@@ -29,11 +32,15 @@ module.exports = function(passport) {
         callbackUrl = 'http://127.0.0.1:3000';
     }
 
-    passport.use(new TwitterStrategy({
-            consumerKey: process.env.CONSUMER_KEY,
-            consumerSecret: process.env.CONSUMER_SECRET,
-            callbackURL: callbackUrl + '/twitter/return'
-        }, function (token, tokenSecret, profile, done) {
+    twitterStrategyOptions = {
+        consumerKey: process.env.CONSUMER_KEY,
+        consumerSecret: process.env.CONSUMER_SECRET,
+        callbackURL: callbackUrl + '/twitter/return'
+    };
+
+    passport.use(new TwitterStrategy(
+        twitterStrategyOptions, 
+        function (token, tokenSecret, profile, done) {
             console.log('- token:', token);
             console.log('- tokenSecret:', tokenSecret);
             process.nextTick(function() {
