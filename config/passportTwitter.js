@@ -26,7 +26,7 @@ module.exports = function(passport) {
     if (process.env.ENVIRONMENT === 'production') {
         callbackUrl = 'https://boiling-coast-6739.herokuapp.com';
     } else {
-        callbackUrl = 'http://127.0.0.1';
+        callbackUrl = 'http://127.0.0.1:3000';
     }
 
     passport.use(new TwitterStrategy({
