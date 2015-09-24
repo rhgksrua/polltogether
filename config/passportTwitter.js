@@ -6,6 +6,7 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var User = require('../models/User');
 
 module.exports = function(passport) {
+    var callbackUrl;
 
     passport.serializeUser(function(user, done) {
         done(null, user.id);
@@ -22,10 +23,16 @@ module.exports = function(passport) {
         });
     });
 
+    if (process.env.ENVIRONMENT === 'production') {
+        callbackUrl = 'https://boiling-coast-6739.herokuapp.com';
+    } else {
+        callbackUrl = 'http://127.0.0.1';
+    }
+
     passport.use(new TwitterStrategy({
             consumerKey: process.env.CONSUMER_KEY,
             consumerSecret: process.env.CONSUMER_SECRET,
-            callbackURL: 'http://127.0.0.1:3000/twitter/return'
+            callbackURL: callbackUrl + '/twitter/return'
         }, function (token, tokenSecret, profile, done) {
             console.log('- token:', token);
             console.log('- tokenSecret:', tokenSecret);
