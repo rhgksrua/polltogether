@@ -12,10 +12,14 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var morgan = require('morgan');
 
-require('dotenv').load();
+// Load api keys from twitter
+if (!process.env.CONSUMER_KEY) {
+    require('dotenv').load();
+}
 
 var app = express();
 
+// passport strategies
 require('./config/passport')(passport);
 require('./config/passportTwitter')(passport);
 
