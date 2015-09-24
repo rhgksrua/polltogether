@@ -2,9 +2,30 @@
 'use strict';
 
 var jwt = require('jsonwebtoken');
+var validator = require('validator');
 var User = require('../models/User');
 
 var JWT_PASS = process.env.JWT_PASS;
+
+/**
+ * validateInput - server side validation
+ *
+ * @param input
+ * @return {undefined}
+ */
+var validateInput = function(input) {
+    var errors = [];
+    if (!validator.isEmail(input.email)) {
+        errors.push('invalid email'); 
+    }
+    if (!validator.isAlphanumeric(input.username) && input.username.length < 3) {
+        errors.push('invalid username');
+    }
+    if (input.password.length < 4) {
+        errors.push('invalid password');
+    }
+    return errors;
+};
 
 /**
  * registerUser
@@ -22,8 +43,13 @@ var registerUser = function(req, res) {
         error: 'db error'
     };
 
-    // email, username, password
     var userInput = req.body;
+
+    // email, username, password
+    var validationErrors = validateInput(userInput);
+    if (validationErrors.length > 0) {
+        return res.json({validationErrors: validationErrors});
+    }
 
     process.nextTick(function() {
         User.findOne({'email': userInput.email}, function(err, user) {

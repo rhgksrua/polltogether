@@ -23,7 +23,6 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
     var owner;
 
     if (req.user && req.user.username === req.body.username){
-        console.log('owner and logged in');
         owner = true;
     } else {
         owner = false;
@@ -31,8 +30,7 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
         
     User.findOne({username: req.body.username}, function(err, user) {
         if (err) {
-            res.json('db error');
-            return console.log(err);
+            return res.json('db error');
         }
         if (!user) {
             return res.json({error: 'user does not exist'});
@@ -47,7 +45,6 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
                 return res.json({polls: polls, owner: owner});
             });
         }
-        
     });
 });
 
@@ -85,7 +82,6 @@ router.post('/removepoll', jwt({secret: JWT_PASS}), authPass, function(req, res)
                 return res.json({message: 'removed'});
             });
         }
-        
     });
 });
 

@@ -19,8 +19,9 @@ block content
                 label(for='username') username
                 input(type='text', name='username')#username.form-control
             input(type='submit').btn.btn-default
-    .container-fluid
-        .error.alert.alert-danger #{message}
+    if message
+        .container-fluid
+            .error.alert.alert-danger #{message}
     script(src='/resources/js/twitterUsername.js')
 
 

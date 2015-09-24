@@ -30,12 +30,11 @@ angular.module('pollApp', [
         var ts = this;
         var store = $window.localStorage;
         var key = 'auth-token';
-        ts.test = function() {
-            console.log('token works');
-        };
+
         ts.removeToken = function() {
             store.removeItem(key);
         };
+
         ts.setToken = function(token) {
             if (token) {
                 store.setItem(key, token);
@@ -43,9 +42,11 @@ angular.module('pollApp', [
                 store.removeItem(key);
             }
         };
+
         ts.getToken = function() {
             return store.getItem(key);
         };
+
         ts.flashMessage = function(msg) {
         };
         

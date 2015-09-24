@@ -14,6 +14,13 @@
             var reg = this;
             var store = $window.localStorage;
             var key = 'auth-token';
+
+            /**
+             * sanitize - removes unwanted property from user oject
+             *
+             * @param {object} user
+             * @return {undefined}
+             */
             reg.sanitize = function(user) {
                 var sanitizedUser = {
                     username: user.username,
@@ -22,14 +29,19 @@
                 };
                 return sanitizedUser;
             };
+
+            /**
+             * register - ajax request to server
+             *
+             * @param user
+             * @return {undefined}
+             */
             reg.register = function(user){
                 user = reg.sanitize(user);
-                console.log('sanitized user', user);
 
                 //Ajax post poll to back end
                 return $http.post('/register', user)
                     .then(function(response) {
-                        console.log('response data', response.data);
                         
                         // do stuff with response here
                         return response;
@@ -37,21 +49,29 @@
             };
         }])
         .factory('AuthInterceptor', function AuthInterceptor(AuthTokenFactory) {
-            return {
-                request: addToken
-            };
-            function addToken(config) {
+
+            /**
+             * addToken - attach authorization to request header
+             *
+             * @param config
+             * @return {undefined}
+             */
+            var addToken = function(config) {
                 var token = registerService.getToken();
                 if (token) {
                     config.headers = config.headers || {};
                     config.headers.Authorization = 'Bearer ' + token;
                 }
                 return config;
-            }
+            };
+
+            return {
+                request: addToken
+            };
         })
         .controller('registerCtrl', ["registerService", '$location', 'tokenService', 'userService', '$route', '$scope', function(registerService, $location, tokenService, userService, $route, $scope){
             var rc = this;
-            // register
+
             rc.user = {};
 
             $scope.share.email = '';
@@ -61,11 +81,25 @@
                 $location.path('/');
                 return;
             }
-            console.log('token not found');
 
+            /**
+             * register - register users
+             *
+             * @param {object} user
+             * @return {undefined}
+             */
             rc.register = function(user) {
                 registerService.register(user)
                     .then(function(response) {
+                        // handle server side validation error
+                        if (response.data.validationErrors) {
+                            console.log(response.data.validationErrors);
+                            rc.validationErrors = response.data.validationErrors;
+                        }
+                        return response;
+                    })
+                    .then(function(response) {
+                        // handle data base error
                         if (response.data.error) {
                             throw new Error('SERVER ERROR');
                         } else if (response.data.exists) {
@@ -81,9 +115,7 @@
                             rc.emailExists = false;
                             console.log('registered');
                             console.log(response.data);
-                            //registerService.setToken(response.data.token);
                             tokenService.setToken(response.data.token);
-                            //$scope.share.email = response.data.email;
                             $scope.$emit('setEmail', response.data.email, response.data.username);
                             $scope.$emit('showMessage', 'registered!');
                             rc.registerSuccess = true;

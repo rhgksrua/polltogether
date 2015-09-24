@@ -35,21 +35,19 @@
 
             userPollService.getPolls(user)
                 .then(function(response) {
-                    console.log(response.data.polls);
                     if (response.data.error) {
                         throw new Error(response.data.error);
                     }
                     if (response.data.polls.length > 0) {
-                        console.log(response.data);
-                        uc.owner = response.data.owner;
+                        // at least one poll found
                         uc.pollList = response.data.polls;
                     }
+                    uc.owner = response.data.owner;
                     return response;
                 })
                 .then(null, function(response) {
-                    
+
                 });
-            console.log(user);
 
             uc.removePoll = function(url, index) {
                 userPollService.removePoll(url, uc.user)
@@ -62,6 +60,7 @@
                         return response;
                     })
                     .then(null, function(response) {
+
                     });
             };
         }]);

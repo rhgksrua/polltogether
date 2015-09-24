@@ -23,9 +23,10 @@ var mongoose = require('mongoose');
 mongoose.connect(mongoURI);
 
 // Routes
-var indexRoute = require('./routes/indexRoute');
-var pollRoute = require('./routes/pollRoute');
-var userRoute = require('./routes/userRoute');
+var twitterRoute = require('./routes/twitterRoute');
+var indexRoute   = require('./routes/indexRoute');
+var pollRoute    = require('./routes/pollRoute');
+var userRoute    = require('./routes/userRoute');
 
 // Separate production and local.
 // var environment = process.env.POLLENV || 'local';
@@ -68,6 +69,7 @@ app.set('view engine', 'jade');
 app.use('/', indexRoute);
 app.use('/poll', pollRoute);
 app.use('/user', userRoute);
+app.use('/twitter', twitterRoute);
 
 
 /******************************************************************************

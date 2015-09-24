@@ -5,34 +5,37 @@
 
             <div class='form-group error-height' ng-class="{ 'has-error': registerForm.email.$invalid && registerForm.email.$dirty }">
                 <label>e-mail</label>
-                <input type='text' class='form-control' ng-minlength='2' name='email' ng-model='user.email' required />
-                <div class='help-block' ng-messages='registerForm.email.$error' ng-show='registerForm.email.$dirty' role='alert'>
+                <input type='email' class='form-control' ng-minlength='2' name='email' ng-model='user.email' required />
+                <div class='help-block' ng-messages='registerForm.email.$error' role='alert'>
                     <p class='help-block' ng-message='required'>email is required</p>
                     <p class='help-block' ng-message='minlength'>email too short</p>
+                    <p class='help-block' ng-message='email'>invalid email</p>
                 </div>
             </div>
 
             <div class='form-group error-height' ng-class="{ 'has-error': registerForm.username.$invalid && registerForm.username.$dirty }">
                 <label>username</label>
-                <input type='text' class='form-control' name='username' ng-model='user.username' required />
-                <div class='help-block' ng-messages='registerForm.username.$error' ng-show='registerForm.username.$touched' role='alert'>
+                <input type='text' class='form-control' name='username' ng-minlength='3' ng-model='user.username' required />
+                <div class='help-block' ng-messages='registerForm.username.$error' role='alert'>
                     <p class='help-block' ng-message='required'>username is required</p>
+                    <p class='help-block' ng-message='minlength'>username is too short</p>
                 </div>
             </div>
 
             <div class='form-group error-height' ng-class="{ 'has-error': registerForm.password.$invalid && registerForm.password.$dirty }">
                 <label>password</label>
-                <input type='password' class='form-control' name='password' ng-model='user.password' required />
-                <div class='help-block' ng-messages='registerForm.password.$error' ng-show='registerForm.password.$touched' role='alert'>
+                <input type='password' class='form-control' name='password' ng-minlength='4' ng-model='user.password' required />
+                <div class='help-block' ng-messages='registerForm.password.$error' role='alert'>
                     <p class='help-block' ng-message='required'>password is required</p>
+                    <p class='help-block' ng-message='minlength'>password too short</p>
                 </div>
             </div>
 
             <div class='form-group error-height' ng-class="{ 'has-error': registerForm.confirm.$invalid && registerForm.confirm.$dirty }">
                 <label>confirm</label>
                 <input type='password' class='form-control' name='confirm' ng-model='user.confirm' compare-to='user.password' required />
-                <div class='help-block' ng-messages='registerForm.confirm.$error' ng-show='registerForm.confirm.$touched' role='alert'>
-                    <p class='help-block' ng-message='required'>mathing password is required</p>
+                <div class='help-block' ng-messages='registerForm.confirm.$error' role='alert'>
+                    <p class='help-block' ng-message='required'>matching password is required</p>
                     <p class='help-block' ng-message='compareTo'>password does not match</p>
                 </div>
             </div>
@@ -42,6 +45,9 @@
         <div ng-show='rc.emailExists'>Email exists</div>
         <div ng-show='rc.usernameExists'>Username exists</div>
         <div ng-show='rc.registerSuccess'>Registered</div>
+        <div ng-show='rc.validationErrors'>
+            <p ng-repeat='error in rc.validationErrors'>{{ error }}</p>
+        </div>
     </div>
 </div>
 
