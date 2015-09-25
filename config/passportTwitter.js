@@ -26,7 +26,7 @@ module.exports = function(passport) {
         });
     });
 
-    if (process.env.ENVIRONMENT === 'production') {
+    if (process.env.NODE_ENV === 'production') {
         callbackUrl = 'https://boiling-coast-6739.herokuapp.com';
     } else {
         callbackUrl = 'http://127.0.0.1:3000';
