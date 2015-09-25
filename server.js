@@ -8,11 +8,13 @@ var passport = require('passport');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
 var session = require('express-session');
+var MongoDBStore = require('connect-mongodb-session')(session);
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
+
 var morgan = require('morgan');
 
-// Load api keys from twitter
+// Load api keys from dot env file
 if (!process.env.CONSUMER_KEY) {
     require('dotenv').load();
 }
@@ -46,10 +48,26 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+// Set session options
+
+var store = new MongoDBStore(
+        {
+            uri: mongoURI,
+            collection: 'mySessions'
+        });
+
+store.on('error', function(err) {
+    console.log('!!!!!!session error');
+});
+
 app.use(session({
-    secret: 'abcdefg',
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
-    resave: true
+    resave: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    },
+    store: store
 }));
 
 app.use(passport.initialize());
