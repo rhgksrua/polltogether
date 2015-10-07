@@ -21,7 +21,7 @@
             <div class="form-group error-height" ng-class="{ 'has-error' : userForm['choice'+$index].$invalid && userForm['choice'+$index].$dirty }" data-ng-repeat="ans in pc.data.choices">
                 <label>Choice</label>
                 <div class='input-group'>
-                    <input type="text" class="form-control" name="{{ans.id}}" placeholder="option" data-ng-model="ans.name" required ng-minlength="1">
+                    <input type="text" class="form-control" name="{{ans.id}}" placeholder="choice" data-ng-model="ans.name" required ng-minlength="1">
                     <span class="input-group-btn">
                         <button type='button' class='btn btn-warning' ng-show='$index === 0'>Required</button>
                         <button type='button' class='btn btn-warning' ng-hide='$index === 0' ng-click='pc.removeChoice($index)'>Remove</button>
