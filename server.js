@@ -54,10 +54,11 @@ var store = new MongoDBStore(
         {
             uri: mongoURI,
             collection: 'mySessions'
-        });
+        }
+);
 
 store.on('error', function(err) {
-    console.log('!!!!!!session error');
+    console.log('mongodb session error');
 });
 
 app.use(session({
@@ -105,7 +106,6 @@ app.use('/twitter', twitterRoute);
 var server = app.listen(port, function(err) {
     console.log(process.env.JWT_PASS);
     console.log(process.env.NODE_ENV);
-    console.log(process.env.TESTVAR);
     console.log('listening on http://%s:%s', 'localhost', port);
     console.log('listening on http://127.0.0.1:%s', port);
 });

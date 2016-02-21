@@ -1,4 +1,5 @@
 'use strict';
+// test test
 
 // Declare app level module which depends on views, and components
 angular.module('pollApp', [
@@ -55,6 +56,11 @@ angular.module('pollApp', [
                 });
         }
 
+        /**
+         * Listens for email from ajax request 
+         *
+         * @return {undefined}
+         */
         $scope.$on('setEmail', function(event, email, username) {
             $scope.share.email = email;
             $scope.share.username = username;
