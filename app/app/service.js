@@ -49,6 +49,8 @@ angular.module('pollApp')
          * gets username and email from server based on jwt token
          *
          * @return {undefined}
+         *
+         * NOTE: need to change the name
          */
         us.getEmail = function(){
             return $http.get('/userinfo')

@@ -23,6 +23,8 @@ var angularFiles = [
     './app/login/**/*.js',
     './app/register/register.js',
     './app/register/**/*.js',
+    './app/password/**/*.js',
+    './app/password/password.js',
     './app/results/results.js',
     './app/results/**/*.js',
     './app/vote/vote.js',

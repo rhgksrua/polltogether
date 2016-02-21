@@ -9,7 +9,8 @@ angular.module('pollApp', [
         'pollApp.pollResult',
         'pollApp.register',
         'pollApp.login',
-        'pollApp.user'
+        'pollApp.user',
+        'pollApp.userPassword'
     ])
     .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
         $httpProvider.interceptors.push('tokenInjector');
@@ -31,11 +32,11 @@ angular.module('pollApp', [
                     if (response.data.error) {
                         throw new Error(response.data.error);
                     }
-                    console.log(response.data);
+                    //console.log(response.data);
                     return response;
                 })
                 .then(null, function(response) {
-                    console.log(response.data);
+                    //console.log(response.data);
                 });
             $scope.share.email = '';
             $scope.share.username = '';
@@ -68,7 +69,7 @@ angular.module('pollApp', [
 
         $scope.$on('showMessage', function(event, message) {
             if (!message) {
-                console.log('showMessage needs message');
+                //console.log('showMessage needs message');
                 return;
             }
             $scope.message = message || '';
@@ -78,6 +79,4 @@ angular.module('pollApp', [
                 ic.message = '';
             }, 3000);
         });
-        
-        // Contains user info
     }]);
