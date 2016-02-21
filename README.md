@@ -18,9 +18,6 @@ This is a fork of Polltogether app.
 All required environment variable should be added in to `.env` file.
 `.env` file should be kept private and should not be included in any public repositotory.
 
-
-```
-
 ### Start app
 
 ```
