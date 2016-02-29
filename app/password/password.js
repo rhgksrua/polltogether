@@ -15,6 +15,10 @@
         .controller('passwordCtrl', ["$location", "passwordService", "$routeParams", "userService", function($location, passwordService, $routeParams, userService){
             var pc = this;
 
+            // user will contain username and new password
+            pc.user = {};
+            pc.error = false;
+
             var user = $routeParams.user;
 
             userService.getEmail()
@@ -43,6 +47,7 @@
              */
             pc.changePassword = function() {
                 console.log('changing pw');
+                console.log('hmm.....');
             };
         }]);
 })();

@@ -86,6 +86,44 @@ router.post('/removepoll', jwt({secret: JWT_PASS}), authPass, function(req, res)
 });
 
 /**
+ * URI /user/password
+ *
+ * Removes poll
+ *
+ * @return {undefined}
+ */
+router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
+    if (!req.user) {
+        console.log('- not logged in');
+        return res.json({error: 'cannot validate user'});
+    }
+    if (req.user.username != req.body.username) {
+        console.log('- not the owner');
+        return res.json({error: 'cannot validate user'});
+    }
+    User.findOne({username: req.user.username}, function(err, user) {
+        if (err) {
+            res.json('db error');
+            return console.log(err);
+        }
+        if (!user) {
+            return res.json({error: 'user does not exist'});
+        }
+
+        if (user) {
+            // get all polls created by the user
+            // NEED TO UPDATE PW HERE!!!
+            Poll.update({user_id: user._id, show: true, url: req.body.url}, {$set: {show: false}}, function(err, poll) {
+                if (err) {
+                    return res.json({error: 'db error'});
+                }
+                return res.json({message: 'removed'});
+            });
+        }
+    });
+});
+
+/**
  * authenticate - replaces express-jwt default behavior on authenication fail
  *
  * @return {undefined}
