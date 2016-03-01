@@ -111,9 +111,14 @@ router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
         }
 
         if (user) {
-            // get all polls created by the user
-            // NEED TO UPDATE PW HERE!!!
-            Poll.update({user_id: user._id, show: true, url: req.body.url}, {$set: {show: false}}, function(err, poll) {
+            // hash pw
+            var newUser = new User();
+            var newPassword = newUser.generateHash(req.body.password);
+            console.log(newPassword);
+            
+
+            // update user password
+            Poll.update({user_id: user._id}, {$set: {password: ''}}, function(err, poll) {
                 if (err) {
                     return res.json({error: 'db error'});
                 }

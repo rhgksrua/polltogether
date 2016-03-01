@@ -30,6 +30,7 @@
                     if (response.data.username === user) {
                         // user authenticated
                         pc.error = false;
+                        pc.user.user = user;
                         return response;
                     }
                     pc.error = true;
@@ -45,9 +46,29 @@
              *
              * @return {undefined}
              */
-            pc.changePassword = function() {
+            pc.changePassword = function(user) {
                 console.log('changing pw');
-                console.log('hmm.....');
+                console.log('user inputs', user);
+                passwordService.password(user)
+                    .then(function(response) {
+                        if (response.data.errors) {
+                            console.log(resopnse.data.validationErrors);
+                        }
+                        return response;
+                    })
+                    .then(function(response) {
+                        if (response.data.error) {
+                            throw new Error('SERVER ERROR');
+                        } else if (response.data.exists) {
+                            throw new Error('exists');
+                        }
+                        console.log('response', response);
+                        return response;
+                    })
+                    .then(null, function(response) {
+                        console.log('error', response);
+                    });
+
             };
         }]);
 })();
