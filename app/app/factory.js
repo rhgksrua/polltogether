@@ -1,3 +1,4 @@
+(function(){
 'use strict';
 
 angular.module('pollApp')
@@ -13,3 +14,4 @@ angular.module('pollApp')
         };
         return tokenInjector;
     }]);
+})();

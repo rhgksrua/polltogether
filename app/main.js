@@ -1,5 +1,4 @@
 'use strict';
-// test test
 
 // Declare app level module which depends on views, and components
 angular.module('pollApp', [
@@ -69,7 +68,6 @@ angular.module('pollApp', [
 
         $scope.$on('showMessage', function(event, message) {
             if (!message) {
-                //console.log('showMessage needs message');
                 return;
             }
             $scope.message = message || '';
@@ -81,6 +79,7 @@ angular.module('pollApp', [
         });
     }]);
 
+(function(){
 'use strict';
 
 angular.module('pollApp')
@@ -96,76 +95,79 @@ angular.module('pollApp')
         };
         return tokenInjector;
     }]);
+})();
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp')
-    .service('tokenService', ['$window', function($window) {
-        var ts = this;
-        var store = $window.localStorage;
-        var key = 'auth-token';
+    angular.module('pollApp')
+        .service('tokenService', ['$window', function($window) {
+            var ts = this;
+            var store = $window.localStorage;
+            var key = 'auth-token';
 
-        ts.removeToken = function() {
-            store.removeItem(key);
-        };
-
-        ts.setToken = function(token) {
-            if (token) {
-                store.setItem(key, token);
-            } else {
+            ts.removeToken = function() {
                 store.removeItem(key);
-            }
-        };
+            };
 
-        ts.getToken = function() {
-            return store.getItem(key);
-        };
+            ts.setToken = function(token) {
+                if (token) {
+                    store.setItem(key, token);
+                } else {
+                    store.removeItem(key);
+                }
+            };
 
-        ts.flashMessage = function(msg) {
-        };
-        
-    }])
-    .service('userService', ['$http','tokenService', function($http, tokenService) {
-        var us = this;
+            ts.getToken = function() {
+                return store.getItem(key);
+            };
 
-        /**
-         * logOut - logs out user
-         * 
-         * tells server to destroy session
-         *
-         * @return {undefined}
-         */
-        us.logOut = function() {
-            return $http.post('/logout')
-                .then(function(response) {
-                    return response;
-                });
-        };
+            ts.flashMessage = function(msg) {
+            };
+            
+        }])
+        .service('userService', ['$http','tokenService', function($http, tokenService) {
+            var us = this;
 
-        /**
-         * getEmail - get user info
-         *
-         * gets username and email from server based on jwt token
-         *
-         * @return {undefined}
-         *
-         * NOTE: need to change the name
-         */
-        us.getEmail = function(){
-            return $http.get('/userinfo')
-                .then(function(response) {
-                    if (response.data.error) {
-                        if (response.data.revoke) {
-                            tokenService.removeToken();
+            /**
+             * logOut - logs out user
+             * 
+             * tells server to destroy session
+             *
+             * @return {undefined}
+             */
+            us.logOut = function() {
+                return $http.post('/logout')
+                    .then(function(response) {
+                        return response;
+                    });
+            };
+
+            /**
+             * getEmail - get user info
+             *
+             * gets username and email from server based on jwt token
+             *
+             * @return {undefined}
+             *
+             * NOTE: need to change the name
+             */
+            us.getEmail = function(){
+                return $http.get('/userinfo')
+                    .then(function(response) {
+                        if (response.data.error) {
+                            if (response.data.revoke) {
+                                tokenService.removeToken();
+                            }
+                            throw new Error(response.data.error);
                         }
-                        throw new Error(response.data.error);
-                    }
-                    return response;
-                });
-        };
-    }]);
+                        return response;
+                    });
+            };
+        }]);
+})();
 
-(function(){
+(function() {
     'use strict';
 
     angular.module('pollApp.pollCreate', ['ngRoute', 'ngAnimate', 'ngMessages', 'ui.bootstrap'])
@@ -274,57 +276,61 @@ angular.module('pollApp')
     })();
 
 
-'use strict';
+(function() {
+    'use strict';
 
-/**
- * Modal
- *
- * @return {undefined}
- */
-angular.module('pollApp.pollCreate')
-    .controller('modalInstanceCtrl', ['$scope', '$modalInstance', 'items', function($scope, $modalInstance, items) {
-        $scope.items = items;
-        
-        $scope.ok = function() {
-            $modalInstance.close();
-        };
+    /**
+     * Modal
+     *
+     * @return {undefined}
+     */
+    angular.module('pollApp.pollCreate')
+        .controller('modalInstanceCtrl', ['$scope', '$modalInstance', 'items', function($scope, $modalInstance, items) {
+            $scope.items = items;
+            
+            $scope.ok = function() {
+                $modalInstance.close();
+            };
 
-        $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
-        };
+            $scope.cancel = function() {
+                $modalInstance.dismiss('cancel');
+            };
 
-    }]);
+        }]);
+})();
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.pollCreate')
-    .service('pollService', ['$http', '$window', function($http, $window) {
-        var poll = this;
-        var validate = function(Poll) {
-            Poll.choices = Poll.choices.filter(function(el) {
-                return el.name && el.name.length > 0;
-            });
-            return Poll;
-        };
-        poll.createPoll = function(Poll){
-            Poll = validate(Poll);
-
-            //Ajax post poll to back end
-            return $http.post('/poll/submit', Poll)
-                .then(function(response) {
-                    // do stuff with response here
-                    return response;
+    angular.module('pollApp.pollCreate')
+        .service('pollService', ['$http', '$window', function($http, $window) {
+            var poll = this;
+            var validate = function(Poll) {
+                Poll.choices = Poll.choices.filter(function(el) {
+                    return el.name && el.name.length > 0;
                 });
-        };
-        poll.getEmail = function(token) {
-            return $http.post('/user/email')
-                .then(function(response) {
-                    return response.data;
-                });
-        };
-    }]);
+                return Poll;
+            };
+            poll.createPoll = function(Poll){
+                Poll = validate(Poll);
 
-(function(){
+                //Ajax post poll to back end
+                return $http.post('/poll/submit', Poll)
+                    .then(function(response) {
+                        // do stuff with response here
+                        return response;
+                    });
+            };
+            poll.getEmail = function(token) {
+                return $http.post('/user/email')
+                    .then(function(response) {
+                        return response.data;
+                    });
+            };
+        }]);
+})();
+
+(function() {
     'use strict';
 
     angular.module('pollApp.login', ['ngRoute','ngAnimate','ngMessages'])
@@ -384,7 +390,7 @@ angular.module('pollApp.login')
         };
     }]);
 
-(function(){
+(function() {
     'use strict';
 
     angular.module('pollApp.register', ['ngRoute','ngAnimate','ngMessages'])
@@ -458,26 +464,28 @@ angular.module('pollApp.login')
 })();
 
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.register')
-    .directive('compareTo', function() {
-        // confirm password directive
-        return {
-            require: 'ngModel',
-            scope: {
-                otherModelValue: '=compareTo'
-            },
-            link: function(scope, element, attributes, ngModel) {
-                ngModel.$validators.compareTo = function(modelValue) {
-                    return modelValue == scope.otherModelValue;
-                };
-                scope.$watch('otherModelValue', function() {
-                    ngModel.$validate();
-                });
-            }
-        };
-    });
+    angular.module('pollApp.register')
+        .directive('compareTo', function() {
+            // confirm password directive
+            return {
+                require: 'ngModel',
+                scope: {
+                    otherModelValue: '=compareTo'
+                },
+                link: function(scope, element, attributes, ngModel) {
+                    ngModel.$validators.compareTo = function(modelValue) {
+                        return modelValue == scope.otherModelValue;
+                    };
+                    scope.$watch('otherModelValue', function() {
+                        ngModel.$validate();
+                    });
+                }
+            };
+        });
+})();
 
 'use strict';
 
@@ -521,7 +529,7 @@ angular.module('pollApp.register')
         };
     }]);
 
-(function(){
+(function() {
     'use strict';
 
     angular.module('pollApp.userPassword', ['ngRoute','ngAnimate','ngMessages'])
@@ -639,7 +647,7 @@ angular.module('pollApp.userPassword')
     }]);
 
 
-(function(){
+(function() {
     'use strict';
 
     angular.module('pollApp.pollResult', ['ngRoute','ngAnimate','ngMessages'])

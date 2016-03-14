@@ -1,5 +1,4 @@
 'use strict';
-// test test
 
 // Declare app level module which depends on views, and components
 angular.module('pollApp', [
@@ -69,7 +68,6 @@ angular.module('pollApp', [
 
         $scope.$on('showMessage', function(event, message) {
             if (!message) {
-                //console.log('showMessage needs message');
                 return;
             }
             $scope.message = message || '';

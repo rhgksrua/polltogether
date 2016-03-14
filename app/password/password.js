@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular.module('pollApp.userPassword', ['ngRoute','ngAnimate','ngMessages'])

@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular.module('pollApp.pollCreate', ['ngRoute', 'ngAnimate', 'ngMessages', 'ui.bootstrap'])
