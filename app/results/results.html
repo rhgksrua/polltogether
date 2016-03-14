@@ -6,6 +6,17 @@
     <div class="well" ng-show='rc.errors.exists'>
         <h3 id="question">{{ rc.poll.question }}</h3>
         <div class="container-fluid">
+            <div class='row'>
+                <div class="col-xs-6 col-xs-offset-3">
+                    <canvas id="doughnut" class="chart chart-doughnut" chart-data="rc.chart.data" chart-labels="rc.chart.labels">
+                    </canvas>
+                </div>
+            </div>
+
+            
+           
+        </div>
+        <div class="container-fluid">
             <div data-ng-repeat='(key, value) in rc.poll.choices'>
                 <div class='panel-body'>
                     <div class='row'>
