@@ -9,9 +9,9 @@
                 controllerAs:'pc'
             });
         }])
-        .service('passwordService', ['$http', '$window', function($http, $window) {
-            var ps = this;
-        }])
+        //.service('passwordService', ['$http', '$window', function($http, $window) {
+        //    var ps = this;
+        //}])
         .controller('passwordCtrl', ["$location", "passwordService", "$routeParams", "userService", function($location, passwordService, $routeParams, userService){
             var pc = this;
 
@@ -47,8 +47,6 @@
              * @return {undefined}
              */
             pc.changePassword = function(user) {
-                console.log('changing pw');
-                console.log('user inputs', user);
                 passwordService.password(user)
                     .then(function(response) {
                         if (response.data.errors) {

@@ -1,100 +1,102 @@
-'use strict';
+(function() {
+    'use strict';
 
-// Declare app level module which depends on views, and components
-angular.module('pollApp', [
-        'ngRoute',
-        'pollApp.pollCreate',
-        'pollApp.pollVote',
-        'pollApp.pollResult',
-        'pollApp.register',
-        'pollApp.login',
-        'pollApp.user',
-        'pollApp.userPassword'
-    ])
-    .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
-        $httpProvider.interceptors.push('tokenInjector');
-        $routeProvider.otherwise({redirectTo: '/create'});
-    }])
-    .controller('indexController', ['userService', 'tokenService', '$scope', '$timeout', '$location', '$route', function(userService, tokenService, $scope, $timeout, $location, $route) {
-        var ic = this;
+    // Declare app level module which depends on views, and components
+    angular.module('pollApp', [
+            'ngRoute',
+            'pollApp.pollCreate',
+            'pollApp.pollVote',
+            'pollApp.pollResult',
+            'pollApp.register',
+            'pollApp.login',
+            'pollApp.user',
+            'pollApp.userPassword'
+        ])
+        .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
+            $httpProvider.interceptors.push('tokenInjector');
+            $routeProvider.otherwise({redirectTo: '/create'});
+        }])
+        .controller('indexController', ['userService', 'tokenService', '$scope', '$timeout', '$location', '$route', function(userService, tokenService, $scope, $timeout, $location, $route) {
+            var ic = this;
 
-        $scope.share = {
-            email: '',
-            username: '',
-            extra: 'nothing here'
-        };
+            $scope.share = {
+                email: '',
+                username: '',
+                extra: 'nothing here'
+            };
 
-        ic.logout = function() {
-            tokenService.removeToken();
-            userService.logOut()
-                .then(function(response) {
-                    if (response.data.error) {
-                        throw new Error(response.data.error);
-                    }
-                    //console.log(response.data);
-                    return response;
-                })
-                .then(null, function(response) {
-                    //console.log(response.data);
-                });
-            $scope.share.email = '';
-            $scope.share.username = '';
-            ic.loggedOut = true;
-            $scope.$emit('showMessage', 'logged out');
-            $location.path('/');
+            ic.logout = function() {
+                tokenService.removeToken();
+                userService.logOut()
+                    .then(function(response) {
+                        if (response.data.error) {
+                            throw new Error(response.data.error);
+                        }
+                        //console.log(response.data);
+                        return response;
+                    })
+                    .then(null, function(response) {
+                        //console.log(response.data);
+                    });
+                $scope.share.email = '';
+                $scope.share.username = '';
+                ic.loggedOut = true;
+                $scope.$emit('showMessage', 'logged out');
+                $location.path('/');
 
-        };
+            };
 
-        if (tokenService.getToken()) {
-            userService.getEmail()
-                .then(function(response) {
-                    $scope.share.email = response.data.email;
-                    $scope.share.username = response.data.username;
-                }).
-                then(null, function(response) {
+            if (tokenService.getToken()) {
+                userService.getEmail()
+                    .then(function(response) {
+                        $scope.share.email = response.data.email;
+                        $scope.share.username = response.data.username;
+                    }).
+                    then(null, function(response) {
 
-                });
-        }
-
-        /**
-         * Listens for email from ajax request 
-         *
-         * @return {undefined}
-         */
-        $scope.$on('setEmail', function(event, email, username) {
-            $scope.share.email = email;
-            $scope.share.username = username;
-        });
-
-        $scope.$on('showMessage', function(event, message) {
-            if (!message) {
-                return;
+                    });
             }
-            $scope.message = message || '';
-            ic.showMessage = true;
-            $timeout(function() {
-                ic.showMessage = false;
-                ic.message = '';
-            }, 3000);
-        });
-    }]);
+
+            /**
+             * Listens for email from ajax request 
+             *
+             * @return {undefined}
+             */
+            $scope.$on('setEmail', function(event, email, username) {
+                $scope.share.email = email;
+                $scope.share.username = username;
+            });
+
+            $scope.$on('showMessage', function(event, message) {
+                if (!message) {
+                    return;
+                }
+                $scope.message = message || '';
+                ic.showMessage = true;
+                $timeout(function() {
+                    ic.showMessage = false;
+                    ic.message = '';
+                }, 3000);
+            });
+        }]);
+}());
 
 (function(){
-'use strict';
+    'use strict';
 
-angular.module('pollApp')
-    .factory('tokenInjector', ['$window', function($window) {
-        var tokenInjector = {
-            request: function(config) {
-                var token = $window.localStorage['auth-token'];
-                if (token) {
-                    config.headers.authorization = 'Bearer ' + token;
+    angular.module('pollApp')
+        .factory('tokenInjector', ['$window', function($window) {
+            var tokenInjector = {
+                request: function(config) {
+                    var token = $window.localStorage['auth-token'];
+                    if (token) {
+                        config.headers.authorization = 'Bearer ' + token;
+                    }
+                    return config;
                 }
-                return config;
-            }
-        };
-        return tokenInjector;
-    }]);
+            };
+            return tokenInjector;
+        }]);
 })();
 
 (function() {
@@ -106,28 +108,48 @@ angular.module('pollApp')
             var store = $window.localStorage;
             var key = 'auth-token';
 
-            ts.removeToken = function() {
-                store.removeItem(key);
-            };
+            ts.removeToken = removeToken;
+            ts.setToken = setToken;
+            ts.getToken = getToken;
 
-            ts.setToken = function(token) {
+            /**
+             * setToken: sets token to localstorage
+             *
+             * @param token
+             * 
+             * @returns {undefined}
+             */
+            function setToken(token) {
                 if (token) {
                     store.setItem(key, token);
                 } else {
                     store.removeItem(key);
                 }
-            };
+            }
 
-            ts.getToken = function() {
+            /**
+             * getToken: retreive token from localstorage
+             *
+             * @returns {undefined}
+             */
+            function getToken() {
                 return store.getItem(key);
-            };
-
-            ts.flashMessage = function(msg) {
-            };
+            }
             
+            /**
+             * removeToken: remove token from localstorage
+             *
+             * @returns {undefined}
+             */
+            function removeToken() {
+                store.removeItem(key);
+            }
         }])
         .service('userService', ['$http','tokenService', function($http, tokenService) {
             var us = this;
+
+            us.logOut = logOut;
+            us.getEmail = getEmail;
 
             /**
              * logOut - logs out user
@@ -136,12 +158,12 @@ angular.module('pollApp')
              *
              * @return {undefined}
              */
-            us.logOut = function() {
+            function logOut() {
                 return $http.post('/logout')
                     .then(function(response) {
                         return response;
                     });
-            };
+            }
 
             /**
              * getEmail - get user info
@@ -152,7 +174,7 @@ angular.module('pollApp')
              *
              * NOTE: need to change the name
              */
-            us.getEmail = function(){
+            function getEmail(){
                 return $http.get('/userinfo')
                     .then(function(response) {
                         if (response.data.error) {
@@ -163,7 +185,7 @@ angular.module('pollApp')
                         }
                         return response;
                     });
-            };
+            }
         }]);
 })();
 
@@ -344,8 +366,6 @@ angular.module('pollApp')
         .controller('loginCtrl', ["loginService", '$location', 'tokenService', 'userService', '$route', '$scope', function(loginService, $location, tokenService, userService, $route, $scope){
             var lc = this;
 
-            console.log('why!');
-
             // This page is not available to logged in user
             if (tokenService.getToken()) {
                 $location.path('/');
@@ -353,7 +373,16 @@ angular.module('pollApp')
             }
 
             lc.user = {};
-            lc.login = function(user) {
+
+            lc.login = login;
+
+            /**
+             * login: 
+             *
+             * @param user
+             * @returns {undefined}
+             */
+            function login(user) {
                 loginService.login(user)
                     .then(function(response) {
                         if (response.data.error) {
@@ -370,25 +399,27 @@ angular.module('pollApp')
                     .then(null, function(response) {
                         console.log('error', response);
                     });
-            };
+            }
         }]);
 })();
 
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.login')
-    .service('loginService', ['$http', '$window', function($http, $window) {
-        var poll = this;
-        poll.login = function(User){
-            //Ajax post poll to back end
-            return $http.post('/login', User)
-                .then(function(response) {
-                    // do stuff with response here
-                    return response;
-                });
-        };
-    }]);
+    angular.module('pollApp.login')
+        .service('loginService', ['$http', '$window', function($http, $window) {
+            var poll = this;
+            poll.login = function(User){
+                //Ajax post poll to back end
+                return $http.post('/login', User)
+                    .then(function(response) {
+                        // do stuff with response here
+                        return response;
+                    });
+            };
+        }]);
+}());
 
 (function() {
     'use strict';
@@ -487,47 +518,49 @@ angular.module('pollApp.login')
         });
 })();
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.register')
-    .service('registerService', ['$http', '$window', function($http, $window) {
-        var reg = this;
-        var store = $window.localStorage;
-        var key = 'auth-token';
+    angular.module('pollApp.register')
+        .service('registerService', ['$http', '$window', function($http, $window) {
+            var reg = this;
+            var store = $window.localStorage;
+            var key = 'auth-token';
 
-        /**
-         * sanitize - removes unwanted property from user oject
-         *
-         * @param {object} user
-         * @return {undefined}
-         */
-        reg.sanitize = function(user) {
-            var sanitizedUser = {
-                username: user.username,
-                email: user.email,
-                password: user.password
+            /**
+             * sanitize - removes unwanted property from user oject
+             *
+             * @param {object} user
+             * @return {undefined}
+             */
+            reg.sanitize = function(user) {
+                var sanitizedUser = {
+                    username: user.username,
+                    email: user.email,
+                    password: user.password
+                };
+                return sanitizedUser;
             };
-            return sanitizedUser;
-        };
 
-        /**
-         * register - ajax request to server
-         *
-         * @param user
-         * @return {undefined}
-         */
-        reg.register = function(user){
-            user = reg.sanitize(user);
+            /**
+             * register - ajax request to server
+             *
+             * @param user
+             * @return {undefined}
+             */
+            reg.register = function(user){
+                user = reg.sanitize(user);
 
-            //Ajax post poll to back end
-            return $http.post('/register', user)
-                .then(function(response) {
-                    
-                    // do stuff with response here
-                    return response;
-                });
-        };
-    }]);
+                //Ajax post poll to back end
+                return $http.post('/register', user)
+                    .then(function(response) {
+                        
+                        // do stuff with response here
+                        return response;
+                    });
+            };
+        }]);
+}());
 
 (function() {
     'use strict';
@@ -540,9 +573,9 @@ angular.module('pollApp.register')
                 controllerAs:'pc'
             });
         }])
-        .service('passwordService', ['$http', '$window', function($http, $window) {
-            var ps = this;
-        }])
+        //.service('passwordService', ['$http', '$window', function($http, $window) {
+        //    var ps = this;
+        //}])
         .controller('passwordCtrl', ["$location", "passwordService", "$routeParams", "userService", function($location, passwordService, $routeParams, userService){
             var pc = this;
 
@@ -578,8 +611,6 @@ angular.module('pollApp.register')
              * @return {undefined}
              */
             pc.changePassword = function(user) {
-                console.log('changing pw');
-                console.log('user inputs', user);
                 passwordService.password(user)
                     .then(function(response) {
                         if (response.data.errors) {
@@ -605,47 +636,48 @@ angular.module('pollApp.register')
 })();
 
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.userPassword')
-    .service('passwordService', ['$http', '$window', function($http, $window) {
-        var pass = this;
-        var store = $window.localStorage;
-        var key = 'auth-token';
+    angular.module('pollApp.userPassword')
+        .service('passwordService', ['$http', '$window', function($http, $window) {
+            var pass = this;
+            var store = $window.localStorage;
+            var key = 'auth-token';
 
-        /**
-         * sanitize - removes unwanted property from user oject
-         *
-         * @param {object} user
-         * @return {undefined}
-         */
-        pass.sanitize = function(user) {
-            var sanitizedUser = {
-                password: user.password
+            /**
+             * sanitize - removes unwanted property from user oject
+             *
+             * @param {object} user
+             * @return {undefined}
+             */
+            pass.sanitize = function(user) {
+                var sanitizedUser = {
+                    password: user.password
+                };
+                return sanitizedUser;
             };
-            return sanitizedUser;
-        };
 
-        /**
-         * register - ajax request to server
-         *
-         * @param user
-         * @return {undefined}
-         */
-        pass.password = function(user){
-            console.log('sending new pw to server...');
-            user = pass.sanitize(user);
+            /**
+             * register - ajax request to server
+             *
+             * @param user
+             * @return {undefined}
+             */
+            pass.password = function(user){
+                console.log('sending new pw to server...');
+                user = pass.sanitize(user);
 
-            //Ajax post poll to back end
-            return $http.post('/user/password', user)
-                .then(function(response) {
-                    
-                    // do stuff with response here
-                    return response;
-                });
-        };
-    }]);
-
+                //Ajax post poll to back end
+                return $http.post('/user/password', user)
+                    .then(function(response) {
+                        
+                        // do stuff with response here
+                        return response;
+                    });
+            };
+        }]);
+}());
 
 (function() {
     'use strict';
@@ -760,178 +792,244 @@ angular.module('pollApp.userPassword')
 })();
 
 
-// poll vote
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.pollVote', ['ngRoute'])
-    .config(['$routeProvider', function($routeProvider) {
-        $routeProvider.when('/vote/:id', {
-            templateUrl: 'vote/vote.html',
-            controller: 'pollVoteCtrl',
-            controllerAs: 'vc'
-        });
-    }])
-    .controller('pollVoteCtrl', ['voteService', '$routeParams', "$location", '$modal', function(voteService, $routeParams, $location, $modal) {
-        var vc = this;
+    angular.module('pollApp.pollResult')
+        .service('resultService', ['$http', '$window', function($http, $window) {
+            var rs = this;
+            rs.errors = {
+                exists: true
+            };
+            rs.poll = {
+                question: null,
+                choices: []
+            };
 
-        // holds user choice
-        vc.choice = undefined;
-        
-        // url or id
-        vc.id = $routeParams.id;
+            /**
+             * getUrl
+             * grabs url as poll id
+             *
+             * @param {string} url
+             * @return {undefined}
+             */
+            rs.getUrl = function(url) {
+                rs.url = url;
+            };
 
-        // status mesasge on modal
-        vc.status = 'Waiting for response...';
-
-        // vote success/fail status
-        vc.failed = false;
-
-        // Set url for ajax request
-        voteService.setId(vc.id);
-
-        // get poll data
-        voteService.getPoll().then(function(response) {
-            console.log('ajax success');
-            console.log(response);
-            if (response.data.error) {
-                throw new Error(response.data.error);
-            }
-            vc.poll = response.data;
-            vc.getError = false;
-        }).then(null, function(response) {
-            console.log('something wrong', response);
-            vc.getError = true;
-        });
-        
-        /**
-         * toggleChoice
-         * sets current choice
-         *
-         * @param {integer} choice
-         * @return {undefined}
-         */
-        vc.toggleChoice = function(choice) {
-            vc.choice = choice;
-        };
-
-        /**
-         * submitVote
-         * submits vote to server via ajax
-         * fails without a valid choice
-         *
-         * @return {undefined}
-         */
-        vc.submitVote = function() {
-            //vc.failed = false;
-            if (vc.choice === undefined) {
-                vc.failed = true;
-                vc.status = 'Need to pick one';
-                vc.open();
-            } else if (vc.choice !== undefined) {
-                voteService.submitVote({id: vc.id, choice: vc.choice})
+            /**
+             * getPollResult
+             * ajax request to for results
+             *
+             * @return {undefined}
+             */
+            rs.getPollResult = function() {
+                rs.errors.exists = true;
+                return $http.get('/poll/' + rs.url + '/results')
                     .then(function(response) {
-                        console.log(response.data.error);
                         if (response.data.error) {
-                            vc.status = response.data.error;
-                            throw new Error(response.data.error);
+                            rs.errors.exists = false;
+                            return;
                         }
-                        // success
-                        vc.status = 'Vote submitted!';
-                        vc.failed = false;
-                        vc.submitted = true;
-                        vc.open();
-                    }).then(null, function(response) {
-                        // failed
-                        if (!vc.status) {
-                            vc.status = 'Vote submission failed';
-                        }
-                        vc.failed = true;
-                        vc.open();
+                        rs.poll.question = response.data.question;
+                        rs.poll.choices = response.data.choices;
+                        //console.log('choices', response.data.choices);
+                        rs.poll.total = rs.totalVotes(rs.poll);
+                        //console.log('poll', rs.poll);
+                        return response;
                     });
-            }
-        };
+            };
 
-        /**
-         * resultsPage
-         * 
-         * show results page
-         *
-         * @return {undefined}
-         */
-        vc.resultsPage = function(){
-            var page = "/vote/" + vc.id + "/results";
-            $location.path(page);
-        };
+            /**
+             * totalVotes
+             * returns total number of votes
+             *
+             * @param {object} data
+             * @return {integer}
+             */
+            rs.totalVotes = function(data) {
+                return data.choices.reduce(function(pv, cv) {
+                    return pv + cv.vote;
+                }, 0);
+            };
+        }]);
+}());
 
-        vc.open = function(size) {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'vote/voteModalContent.html',
-                controller: 'modalInstanceCtrl',
-                constollerAs: 'mi',
-                size: size,
-                resolve: {
-                    items: function() {
-                        return {
-                            failed: vc.failed,
-                            status: vc.status,
-                            id: vc.id
-                        };
-                    }
+(function() {
+    'use strict';
+
+    angular.module('pollApp.pollVote', ['ngRoute'])
+        .config(['$routeProvider', function($routeProvider) {
+            $routeProvider.when('/vote/:id', {
+                templateUrl: 'vote/vote.html',
+                controller: 'pollVoteCtrl',
+                controllerAs: 'vc'
+            });
+        }])
+        .controller('pollVoteCtrl', ['voteService', '$routeParams', "$location", '$modal', function(voteService, $routeParams, $location, $modal) {
+            var vc = this;
+
+            // holds user choice
+            vc.choice = undefined;
+            
+            // url or id
+            vc.id = $routeParams.id;
+
+            // status mesasge on modal
+            vc.status = 'Waiting for response...';
+
+            // vote success/fail status
+            vc.failed = false;
+
+            // Set url for ajax request
+            voteService.setId(vc.id);
+
+            // get poll data
+            voteService.getPoll().then(function(response) {
+                console.log('ajax success');
+                console.log(response);
+                if (response.data.error) {
+                    throw new Error(response.data.error);
                 }
+                vc.poll = response.data;
+                vc.getError = false;
+            }).then(null, function(response) {
+                console.log('something wrong', response);
+                vc.getError = true;
             });
+            
+            /**
+             * toggleChoice
+             * sets current choice
+             *
+             * @param {integer} choice
+             * @return {undefined}
+             */
+            vc.toggleChoice = function(choice) {
+                vc.choice = choice;
+            };
 
-            modalInstance.result.then(function(selectedItem) {
-                console.log('selectedItem: ', selectedItem);
-            });
-        };
-    }]);
+            /**
+             * submitVote
+             * submits vote to server via ajax
+             * fails without a valid choice
+             *
+             * @return {undefined}
+             */
+            vc.submitVote = function() {
+                //vc.failed = false;
+                if (vc.choice === undefined) {
+                    vc.failed = true;
+                    vc.status = 'Need to pick one';
+                    vc.open();
+                } else if (vc.choice !== undefined) {
+                    voteService.submitVote({id: vc.id, choice: vc.choice})
+                        .then(function(response) {
+                            console.log(response.data.error);
+                            if (response.data.error) {
+                                vc.status = response.data.error;
+                                throw new Error(response.data.error);
+                            }
+                            // success
+                            vc.status = 'Vote submitted!';
+                            vc.failed = false;
+                            vc.submitted = true;
+                            vc.open();
+                        }).then(null, function(response) {
+                            // failed
+                            if (!vc.status) {
+                                vc.status = 'Vote submission failed';
+                            }
+                            vc.failed = true;
+                            vc.open();
+                        });
+                }
+            };
 
-'use strict';
+            /**
+             * resultsPage
+             * 
+             * show results page
+             *
+             * @return {undefined}
+             */
+            vc.resultsPage = function(){
+                var page = "/vote/" + vc.id + "/results";
+                $location.path(page);
+            };
 
-angular.module('pollApp.pollVote')
-    .service('voteService', ['$http', function($http) {
-        var poll = this;
-
-        /**
-         * setId
-         * url to get poll id for ajax request
-         *
-         * @param id
-         * @return {undefined}
-         */
-        poll.setId = function(id) {
-            poll.id = id;
-        };
-
-        /**
-         * getPoll
-         * ajax request to server api to get poll
-         *
-         * @return {undefined}
-         */
-        poll.getPoll = function() {
-            return $http.get('/poll/' + poll.id)
-                .then(function(response) {
-                    return response;
+            vc.open = function(size) {
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'vote/voteModalContent.html',
+                    controller: 'modalInstanceCtrl',
+                    constollerAs: 'mi',
+                    size: size,
+                    resolve: {
+                        items: function() {
+                            return {
+                                failed: vc.failed,
+                                status: vc.status,
+                                id: vc.id
+                            };
+                        }
+                    }
                 });
-        };
 
-        /**
-         * submitVote
-         * ajax request to server api to submit vote
-         *
-         * @param {object} vote
-         * @return {undefined}
-         */
-        poll.submitVote = function(vote) {
-            console.log(vote);
-            return $http.post('/poll/vote/submit', vote)
-                .then(function(response) {
-                    return response;
+                modalInstance.result.then(function(selectedItem) {
+                    console.log('selectedItem: ', selectedItem);
                 });
-        };
-    }]);
+            };
+        }]);
+}());
+
+(function() {
+    'use strict';
+
+    angular.module('pollApp.pollVote')
+        .service('voteService', ['$http', function($http) {
+            var poll = this;
+
+            /**
+             * setId
+             * url to get poll id for ajax request
+             *
+             * @param id
+             * @return {undefined}
+             */
+            poll.setId = function(id) {
+                poll.id = id;
+            };
+
+            /**
+             * getPoll
+             * ajax request to server api to get poll
+             *
+             * @return {undefined}
+             */
+            poll.getPoll = function() {
+                return $http.get('/poll/' + poll.id)
+                    .then(function(response) {
+                        return response;
+                    });
+            };
+
+            /**
+             * submitVote
+             * ajax request to server api to submit vote
+             *
+             * @param {object} vote
+             * @return {undefined}
+             */
+            poll.submitVote = function(vote) {
+                console.log(vote);
+                return $http.post('/poll/vote/submit', vote)
+                    .then(function(response) {
+                        return response;
+                    });
+            };
+        }]);
+}());
 
 (function(){
     'use strict';
@@ -984,22 +1082,24 @@ angular.module('pollApp.pollVote')
 })();
 
 
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('pollApp.user')
-    .service('userPollService', ['$http', '$window', function($http, $window) {
-        var us = this;
+    angular.module('pollApp.user')
+        .service('userPollService', ['$http', '$window', function($http, $window) {
+            var us = this;
 
-        us.getPolls = function(username) {
-            return $http.post('/user/polls', {'username': username})
-                .then(function(response) {
-                    return response;
-                });
-        };
-        us.removePoll = function(url, username) {
-            return $http.post('/user/removepoll', {url: url, username: username})
-                .then(function(response) {
-                    return response;
-                });
-        };
-    }]);
+            us.getPolls = function(username) {
+                return $http.post('/user/polls', {'username': username})
+                    .then(function(response) {
+                        return response;
+                    });
+            };
+            us.removePoll = function(url, username) {
+                return $http.post('/user/removepoll', {url: url, username: username})
+                    .then(function(response) {
+                        return response;
+                    });
+            };
+        }]);
+}());

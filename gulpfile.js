@@ -44,16 +44,31 @@ gulp.task('default', function() {
  *
  * When files are changed, the files are concatonated and injected to index.html.
  */
-gulp.task('develop', function() {
+gulp.task('dev', function() {
     nodemon({
         script: 'server.js',
         ext: 'js html',
-        tasks: ['concat', 'inject-main'],
+        tasks: ['concat-js', 'concat-bower'],
         ignore: ['main.js', 'index.html'],
         env: { 
             'NODE_ENV': 'development',
         }
     });
+});
+
+gulp.task('develop', function() {
+});
+
+gulp.task('concat-js', function() {
+    return gulp.src(angularFiles)
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('./app'));
+});
+
+gulp.task('concat-bower', function() {
+    return gulp.src(bowerFiles(), {base: './app/bower_components'})
+        .pipe(concat('libs.js'))
+        .pipe(gulp.dest('./app'));
 });
 
 gulp.task('inject-bower', function() {
@@ -64,23 +79,10 @@ gulp.task('inject-bower', function() {
 });
 
 /**
- * Deprecated!
- *
- * Requires specific folder structure for Angular.js
- * This project does not have that structure.
- */
-gulp.task('inject', function() {
-    var target = gulp.src('./app/index.html');
-    var sources = gulp.src(angularFiles, {read: false});
-    return target
-        .pipe(inj(sources, {relative: true}))
-        .pipe(gulp.dest('./app'));
-});
-
-/**
  * Concatonates js files
  */
 gulp.task('concat', function() {
+    console.log('concating ...');
     return gulp.src(angularFiles)
         .pipe(concat('main.js'))
         .pipe(gulp.dest('./app'));
@@ -91,6 +93,7 @@ gulp.task('concat', function() {
  * main.js is the concatonated file from task 'concat'
  */
 gulp.task('inject-main', function() {
+    console.log('inject-main...');
     var target = gulp.src('./app/index.html');
     var sources = gulp.src('./app/main.js', {read: false});
     return target

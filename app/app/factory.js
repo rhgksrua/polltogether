@@ -1,17 +1,17 @@
 (function(){
-'use strict';
+    'use strict';
 
-angular.module('pollApp')
-    .factory('tokenInjector', ['$window', function($window) {
-        var tokenInjector = {
-            request: function(config) {
-                var token = $window.localStorage['auth-token'];
-                if (token) {
-                    config.headers.authorization = 'Bearer ' + token;
+    angular.module('pollApp')
+        .factory('tokenInjector', ['$window', function($window) {
+            var tokenInjector = {
+                request: function(config) {
+                    var token = $window.localStorage['auth-token'];
+                    if (token) {
+                        config.headers.authorization = 'Bearer ' + token;
+                    }
+                    return config;
                 }
-                return config;
-            }
-        };
-        return tokenInjector;
-    }]);
+            };
+            return tokenInjector;
+        }]);
 })();

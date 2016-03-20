@@ -7,28 +7,48 @@
             var store = $window.localStorage;
             var key = 'auth-token';
 
-            ts.removeToken = function() {
-                store.removeItem(key);
-            };
+            ts.removeToken = removeToken;
+            ts.setToken = setToken;
+            ts.getToken = getToken;
 
-            ts.setToken = function(token) {
+            /**
+             * setToken: sets token to localstorage
+             *
+             * @param token
+             * 
+             * @returns {undefined}
+             */
+            function setToken(token) {
                 if (token) {
                     store.setItem(key, token);
                 } else {
                     store.removeItem(key);
                 }
-            };
+            }
 
-            ts.getToken = function() {
+            /**
+             * getToken: retreive token from localstorage
+             *
+             * @returns {undefined}
+             */
+            function getToken() {
                 return store.getItem(key);
-            };
-
-            ts.flashMessage = function(msg) {
-            };
+            }
             
+            /**
+             * removeToken: remove token from localstorage
+             *
+             * @returns {undefined}
+             */
+            function removeToken() {
+                store.removeItem(key);
+            }
         }])
         .service('userService', ['$http','tokenService', function($http, tokenService) {
             var us = this;
+
+            us.logOut = logOut;
+            us.getEmail = getEmail;
 
             /**
              * logOut - logs out user
@@ -37,12 +57,12 @@
              *
              * @return {undefined}
              */
-            us.logOut = function() {
+            function logOut() {
                 return $http.post('/logout')
                     .then(function(response) {
                         return response;
                     });
-            };
+            }
 
             /**
              * getEmail - get user info
@@ -53,7 +73,7 @@
              *
              * NOTE: need to change the name
              */
-            us.getEmail = function(){
+            function getEmail(){
                 return $http.get('/userinfo')
                     .then(function(response) {
                         if (response.data.error) {
@@ -64,6 +84,6 @@
                         }
                         return response;
                     });
-            };
+            }
         }]);
 })();

@@ -12,8 +12,6 @@
         .controller('loginCtrl', ["loginService", '$location', 'tokenService', 'userService', '$route', '$scope', function(loginService, $location, tokenService, userService, $route, $scope){
             var lc = this;
 
-            console.log('why!');
-
             // This page is not available to logged in user
             if (tokenService.getToken()) {
                 $location.path('/');
@@ -21,7 +19,16 @@
             }
 
             lc.user = {};
-            lc.login = function(user) {
+
+            lc.login = login;
+
+            /**
+             * login: 
+             *
+             * @param user
+             * @returns {undefined}
+             */
+            function login(user) {
                 loginService.login(user)
                     .then(function(response) {
                         if (response.data.error) {
@@ -38,7 +45,7 @@
                     .then(null, function(response) {
                         console.log('error', response);
                     });
-            };
+            }
         }]);
 })();
 
