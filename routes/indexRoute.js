@@ -25,7 +25,10 @@ var JWT_PASS = process.env.JWT_PASS || 'pass';
  **/
 router.get('/', function(req, res) {
     res.render('./app/index');
-    //res.sendFile(__dirname + '/app/index.html');
+    if (process.env.NODE_ENV === 'production') {
+        console.log('serving prod');
+        res.render('./dist/index');
+    }
 });
 
 /**
@@ -48,12 +51,8 @@ router.get('/userinfo', expressjwt({secret: JWT_PASS}), authenticate, function(r
  * @return {undefined}
  */
 router.post('/login', function(req, res, next) {
-    console.log('--- log in');
-    
     passport.authenticate('local-login', function(err, user, info) {
-        console.log('- start auth');
         if (err) {
-            console.log('- db error');
             res.json({error: 'db error'});
             return next(err);
         }

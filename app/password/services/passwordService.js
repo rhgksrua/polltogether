@@ -15,6 +15,7 @@
              */
             pass.sanitize = function(user) {
                 var sanitizedUser = {
+                    current: user.current,
                     password: user.password
                 };
                 return sanitizedUser;
@@ -34,7 +35,6 @@
                 return $http.post('/user/password', user)
                     .then(function(response) {
                         
-                        // do stuff with response here
                         return response;
                     });
             };

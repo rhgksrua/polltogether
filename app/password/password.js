@@ -56,7 +56,7 @@
                     })
                     .then(function(response) {
                         if (response.data.error) {
-                            throw new Error('SERVER ERROR');
+                            throw new Error(response.data.error);
                         } else if (response.data.exists) {
                             throw new Error('exists');
                         }

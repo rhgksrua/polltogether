@@ -26,7 +26,11 @@ UserSchema.methods.generateHash = function(password) {
 };
 
 UserSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
+    try {
+        return bcrypt.compareSync(password, this.password);
+    } catch (ex) {
+        return false;
+    }
 };
 
 // The name of collection will be 'polls' by default unless collection

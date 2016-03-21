@@ -7,6 +7,8 @@ var angularFilesort = require('gulp-angular-filesort');
 var nodemon = require('gulp-nodemon');
 var bowerFiles = require('main-bower-files');
 var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var mainBowerFiles = require('main-bower-files');
 
 /**
  * Inject order
@@ -57,17 +59,49 @@ gulp.task('dev', function() {
 });
 
 gulp.task('develop', function() {
+    nodemon({
+        script: 'server.js',
+        ext: 'js html',
+        ignore: ['index.html'],
+        env: { 
+            'NODE_ENV': 'development',
+        }
+    });
 });
 
-gulp.task('concat-js', function() {
+gulp.task('production', function() {
+    nodemon({
+        script: 'server.js',
+        ext: 'js html',
+        ignore: ['index.html'],
+        env: {
+            'NODE_ENV': 'production',
+        }
+    });
+});
+
+gulp.task('bower-files', function() {
+    return gulp.src(mainBowerFiles())
+        .pipe(concat('libs.min.js'))
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('html', function() {
+    return gulp.src('./app/index.html')
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('app-js', function() {
     return gulp.src(angularFiles)
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('./app'));
+        .pipe(concat('app.min.js'))
+        .pipe(uglify()) 
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('concat-bower', function() {
     return gulp.src(bowerFiles(), {base: './app/bower_components'})
-        .pipe(concat('libs.js'))
+        .pipe(concat('libs.min.js'))
+        .pip(uglify())
         .pipe(gulp.dest('./app'));
 });
 
@@ -79,27 +113,40 @@ gulp.task('inject-bower', function() {
 });
 
 /**
- * Concatonates js files
- */
-gulp.task('concat', function() {
-    console.log('concating ...');
-    return gulp.src(angularFiles)
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('./app'));
-});
-
-/**
  * Injects main.js to index.html
  * main.js is the concatonated file from task 'concat'
  */
-gulp.task('inject-main', function() {
-    console.log('inject-main...');
-    var target = gulp.src('./app/index.html');
-    var sources = gulp.src('./app/main.js', {read: false});
+gulp.task('inject-app', ['html', 'app-js'], function() {
+    var target = gulp.src('./dist/index.html');
+    var sources = gulp.src(['./dist/app.min.js'], {read: false});
     return target
         .pipe(inj(sources, {relative: true}))
-        .pipe(gulp.dest('./app'));
+        .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('build', ['concat', 'inject-main']);
+gulp.task('move-css', function() {
+    return gulp.src(['./app/bower_components/**/*.css'], {read: false})
+        .pipe(gulp.dest('./dist/css'));
+});
+
+gulp.task('inject-bower-css', ['move-css'], function() {
+    var target = gulp.src('./dist/index.html');
+    var sources = gulp.src(['./dist/css/**/*.css'], {read: false});
+    return target
+        .pipe(inj(sources, {relative: false, name: 'bower'}))
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('inject-bower', ['bower-files'], function() {
+    var target = gulp.src('./dist/index.html');
+    var sources = gulp.src(['./dist/libs.min.js'], {read: false});
+    return target
+        .pipe(inj(sources, {relative: true, name: 'bower'}))
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('build',[], function() {
+});
+
+
 

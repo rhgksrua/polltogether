@@ -93,15 +93,18 @@ router.post('/removepoll', jwt({secret: JWT_PASS}), authPass, function(req, res)
  * @return {undefined}
  */
 router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
+
+    // user = {current, password}
+    
+    // NEED TO VALIDATE USER INPUT
+
     if (!req.user) {
         console.log('- not logged in');
         return res.json({error: 'cannot validate user'});
     }
-    if (req.user.username != req.body.username) {
-        console.log('- not the owner');
-        return res.json({error: 'cannot validate user'});
-    }
     User.findOne({username: req.user.username}, function(err, user) {
+        var newPasswordHash;
+
         if (err) {
             res.json('db error');
             return console.log(err);
@@ -110,6 +113,22 @@ router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
             return res.json({error: 'user does not exist'});
         }
 
+
+        // check current pw
+        if (user.validPassword(req.body.current)) {
+            // user pw correct, set pw to new pw.
+            newPasswordHash = user.generateHash(req.body.password);
+            User.update({_id: user._id}, {$set: {password: newPasswordHash}}, function(err, currentUser) {
+                if (err) {
+                    return res.json({error: 'db error'});
+                }
+                return res.json({message: 'new password set'});
+            });
+        } else {
+            return res.json({error: 'password incorrect'});
+        }
+
+        /*
         if (user) {
             // hash pw
             var newUser = new User();
@@ -125,6 +144,7 @@ router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
                 return res.json({message: 'removed'});
             });
         }
+        */
     });
 });
 

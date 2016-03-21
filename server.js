@@ -42,7 +42,14 @@ var userRoute    = require('./routes/userRoute');
 var port = process.env.PORT || 3000;
 
 // Serves static files
-app.use(express.static('app'));
+//app.use(express.static('app'));
+if (process.env.NODE_ENV === 'production') {
+    console.log('serving from dist');
+    app.use(express.static('dist'));
+} else {
+    console.log('serving from dev');
+    app.use(express.static('app'));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -103,8 +110,6 @@ app.use('/twitter', twitterRoute);
 *******************************************************************************/
 
 var server = app.listen(port, function(err) {
-    //console.log(process.env.JWT_PASS);
-    //console.log(process.env.NODE_ENV);
     console.log('listening on http://%s:%s', 'localhost', port);
     console.log('listening on http://127.0.0.1:%s', port);
 });

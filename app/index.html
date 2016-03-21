@@ -9,16 +9,24 @@
   <title>POLLTOGETHER</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
   <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css">
-  <!--
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
-  -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
+  <!-- endinject -->
+
+  <!-- inject:css -->
   <link rel="stylesheet" href="css/helper.css">
   <link rel="stylesheet" href="app.css">
-  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <!-- endinject -->
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js
+
+Copy
+  "></script>
 </head>
 <body ng-controller='indexController as ic'>
     <nav class='navbar navbar-default'>
@@ -48,18 +56,23 @@
 
   <div ng-view class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8"></div>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-animate.min.js"></script>
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <!-- bower:js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-loader/angular-loader.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/angular-mocks/angular-mocks.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-messages/angular-messages.min.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/angular-chart.js/angular-chart.js"></script>
+  <!-- endinject -->
+
+
+
+  <!-- inject:js -->
   <script src="app.js"></script>
   <script src="app/factory.js"></script>
   <script src="app/service.js"></script>
@@ -76,31 +89,8 @@
   <script src="register/directives/compareToDirective.js"></script>
   <script src="user/user.js"></script>
   <script src="user/services/userPollService.js"></script>
-  -->
-
-  <!-- bower:css -->
-  <!-- endinject -->
-
-  <!-- inject:css -->
-  <!-- endinject -->
-
-  <!-- bower:js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="bower_components/angular-loader/angular-loader.js"></script>
-  <script src="bower_components/angular-messages/angular-messages.js"></script>
-  <script src="bower_components/angular-mocks/angular-mocks.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="bower_components/angular-chart.js/angular-chart.js"></script>
-  <!-- endinject -->
-
-  <!-- inject:js -->
-  <script src="main.js"></script>
+  <script src="password/password.js"></script>
+  <script src="password/services/passwordService.js"></script>
   <!-- endinject -->
 
 </body>
