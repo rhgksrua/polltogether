@@ -26,3 +26,4 @@ bower install
 
 gulp develop
 ```
+added password change validation and error handling.
