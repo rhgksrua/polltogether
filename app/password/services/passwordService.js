@@ -29,12 +29,13 @@
              */
             pass.password = function(user){
                 console.log('sending new pw to server...');
+                
                 user = pass.sanitize(user);
 
                 //Ajax post poll to back end
                 return $http.post('/user/password', user)
                     .then(function(response) {
-                        
+                        console.log('response', response);
                         return response;
                     });
             };

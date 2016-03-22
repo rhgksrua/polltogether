@@ -21,6 +21,12 @@
 
             var user = $routeParams.user;
 
+            /**
+             * check if user tries to change other user's password
+             *
+             * This is only client side validation. Server does another
+             * validation with user name and password.
+             */
             userService.getEmail()
                 .then(function(response) {
                     if (response.data.error) {
@@ -29,16 +35,15 @@
                     }
                     if (response.data.username === user) {
                         // user authenticated
-                        pc.error = false;
                         pc.user.user = user;
                         return response;
                     }
-                    pc.error = true;
+                    pc.userError = true;
                 })
                 .then(null, function(response) {
                     // authenication failed
                     // show error alert
-                    pc.error = true;
+                    pc.userError = true;
                 });
 
             /**
@@ -49,24 +54,17 @@
             pc.changePassword = function(user) {
                 passwordService.password(user)
                     .then(function(response) {
-                        if (response.data.errors) {
-                            console.log(resopnse.data.validationErrors);
-                        }
-                        return response;
-                    })
-                    .then(function(response) {
                         if (response.data.error) {
-                            throw new Error(response.data.error);
-                        } else if (response.data.exists) {
-                            throw new Error('exists');
+                            console.log('errors', response.data.error);
+                            pc.error = 'error';
+                            return response;
                         }
-                        console.log('response', response);
+                        pc.success = true;
                         return response;
                     })
                     .then(null, function(response) {
-                        console.log('error', response);
+                        pc.error = 'error';
                     });
-
             };
         }]);
 })();

@@ -9,6 +9,7 @@ var bowerFiles = require('main-bower-files');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var mainBowerFiles = require('main-bower-files');
+var Server = require('karma').Server;
 
 /**
  * Inject order
@@ -67,6 +68,20 @@ gulp.task('develop', function() {
             'NODE_ENV': 'development',
         }
     });
+});
+
+gulp.task('test', function(done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
+});
+
+gulp.task('tdd', function(done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        autoWatch: true
+    }, done).start();
 });
 
 gulp.task('production', function() {
