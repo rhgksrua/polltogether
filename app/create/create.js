@@ -13,7 +13,7 @@
             var pc = this;
             pc.host = $location.host();
             pc.data = {choices: []};
-            pc.data.choices.push({'id': 'choice0' , "vote": 0});
+            pc.data.choices.push({'id': 'choice1' , "vote": 0});
             pc.email = '';
 
             /**
@@ -59,7 +59,7 @@
              * @return {undefined}
              */
             pc.resetForm = function() {
-                console.log('reset form');
+                //console.log('reset form');
                 pc.data = {choices: [{'id': 'choice0' , "vote": 0}]};
             };
 
