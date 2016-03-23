@@ -1,5 +1,6 @@
 describe('JSON validator', function() {
     'use strict';
+
     var validator = require('../helper/pollValidator');
 
     it('should fail validation on empty parameter', function() {

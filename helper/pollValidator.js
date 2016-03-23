@@ -34,7 +34,9 @@ var pollValidator = function(poll, callback) {
         err = 'need two or more choices';
     }
 
-    callback(err);
+    if (typeof callback === 'function') {
+        callback(err);
+    }
 
     if (err) {
         return false;

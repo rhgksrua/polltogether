@@ -39,7 +39,6 @@ router.get('/', function(req, res) {
  * @return {undefined}
  */
 router.get('/userinfo', expressjwt({secret: JWT_PASS}), authenticate, function(req, res) {
-    console.log('user', req.user);
     res.json({email: req.user.email, username: req.user.username});
 });
 
