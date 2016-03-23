@@ -13,7 +13,7 @@ module.exports = function(config){
             'app/bower_components/angular-bootstrap/ui-bootstrap.js',
             'app/create/*.js',
             'app/create/modal/*.js',
-            'app/create/services/*.js'
+            'app/create/services/*.js',
         ],
 
         autoWatch : true,
