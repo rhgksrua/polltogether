@@ -6,17 +6,12 @@
  * 
  *
  */
-var Validator = function(rules) {
+function Validator(rules) {
     this.rules = rules;
-    
-    
-
-    
-};
+}
 
 Validator.prototype.getRules = function() {
     return this.rules;
 };
-
 
 module.exports = Validator;
