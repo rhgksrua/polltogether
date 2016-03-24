@@ -57,12 +57,8 @@ router.post('/login', function(req, res, next) {
         }
 
         if (!user) {
-            console.log('- user: ', user);
-            console.log('- user does not exist');
             return res.send({error: 'login error error error'});
         }
-
-        console.log('sending user.....................', user);
 
         // creating token
         var token = jwt.sign({

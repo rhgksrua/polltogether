@@ -117,6 +117,10 @@ router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
             return res.json({error: 'user does not exist'});
         }
 
+        // check if twitter signin user
+        if (user.twitter.username !== 'undefined') {
+            return res.json({error: 'third party signin user'});
+        }
 
         // check current pw
         if (user.validPassword(req.body.current)) {
@@ -131,24 +135,6 @@ router.post('/password', jwt({secret: JWT_PASS}), authPass, function(req, res) {
         } else {
             return res.json({error: 'password incorrect'});
         }
-
-        /*
-        if (user) {
-            // hash pw
-            var newUser = new User();
-            var newPassword = newUser.generateHash(req.body.password);
-            console.log(newPassword);
-            
-
-            // update user password
-            Poll.update({user_id: user._id}, {$set: {password: ''}}, function(err, poll) {
-                if (err) {
-                    return res.json({error: 'db error'});
-                }
-                return res.json({message: 'removed'});
-            });
-        }
-        */
     });
 });
 
