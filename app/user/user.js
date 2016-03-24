@@ -25,6 +25,9 @@
                         uc.pollList = response.data.polls;
                     }
                     uc.owner = response.data.owner;
+                    uc.twitter = response.data.twitter;
+                    console.log(uc.owner, uc.twitter);
+                    console.log(uc.owner && !uc.twitter);
                     return response;
                 })
                 .then(null, function(response) {
