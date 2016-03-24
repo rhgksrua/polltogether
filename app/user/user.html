@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class='container-fluid'>
         <p class='pull-left' ng-show='uc.user'>{{ uc.user }}'s Polls</p>
-        <p class='pull-right' ng-show='uc.owner'><a href='/#/user/{{uc.user}}/password'>Change password</a></p>
+        <p class='pull-right' ng-show='uc.owner && !uc.twitter'><a href='/#/user/{{uc.user}}/password'>Change password</a></p>
     </div>
     <ul class='list-group'>
         <li class='list-group-item' ng-repeat='poll in uc.pollList'>

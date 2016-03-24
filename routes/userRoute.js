@@ -21,6 +21,7 @@ var JWT_PASS = process.env.JWT_PASS || 'pass';
 router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), function(req, res) {
 
     var owner;
+    var twitter = false;
 
     if (req.user && req.user.username === req.body.username){
         owner = true;
@@ -35,6 +36,9 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
         if (!user) {
             return res.json({error: 'user does not exist'});
         }
+        if (user.twitter.username) {
+            twitter = true;
+        }
 
         if (user) {
             // get all polls created by the user
@@ -42,7 +46,7 @@ router.post('/polls', jwt({secret: JWT_PASS, credentialsRequired: false}), funct
                 if (err) {
                     return res.json('db error');
                 }
-                return res.json({polls: polls, owner: owner});
+                return res.json({polls: polls, owner: owner, twitter: twitter});
             });
         }
     });
