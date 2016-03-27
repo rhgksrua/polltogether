@@ -1,13 +1,6 @@
 # Polltogether
 
-This is a fork of Polltogether app.
-
 ## What's new
-
-* Uses mongoose
-* User registration
-* Poll management
-* Small QOL features
 
 
 ## Getting Started
@@ -26,4 +19,8 @@ bower install
 
 gulp develop
 ```
-added password change validation and error handling.
+
+### TODO
+
+validator
+
