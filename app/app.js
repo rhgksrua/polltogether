@@ -32,11 +32,10 @@
                         if (response.data.error) {
                             throw new Error(response.data.error);
                         }
-                        //console.log(response.data);
                         return response;
                     })
                     .then(null, function(response) {
-                        //console.log(response.data);
+                        console.log('user logged out');
                     });
                 $scope.share.email = '';
                 $scope.share.username = '';
